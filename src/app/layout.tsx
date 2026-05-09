@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import CookieBanner from "@/components/CookieBanner";
+import SessionProvider from "@/components/SessionProvider";
 
 export const metadata: Metadata = {
-  title: "CosmaClub — Community Tennis Club",
+  title: "NovaClub — Community Tennis Club",
   description:
     "A non-profit community tennis club based in Scotland. Join us for sessions, coaching, competitions and more.",
 };
@@ -16,8 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
-        <CookieBanner />
+        <SessionProvider>
+          {children}
+          <CookieBanner />
+        </SessionProvider>
       </body>
     </html>
   );
