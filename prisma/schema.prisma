@@ -342,3 +342,45 @@ model CookieConsent {
 
   @@map("cookie_consents")
 }
+
+model Player {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  elo         Int      @default(1000)
+  wins        Int      @default(0)
+  losses      Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  challengesSent     Match[] @relation("Challenger")
+  challengesReceived Match[] @relation("Opponent")
+
+  @@map("players")
+}
+
+model Match {
+  id           String      @id @default(cuid())
+  challengerId String
+  opponentId   String
+  sessionDate  DateTime?
+  status       MatchStatus @default(PENDING)
+  scoreChallenger Int?
+  scoreOpponent   Int?
+  eloChangeChal   Int?
+  eloChangeOpp    Int?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  challenger Player @relation("Challenger", fields: [challengerId], references: [id])
+  opponent   Player @relation("Opponent", fields: [opponentId], references: [id])
+
+  @@map("matches")
+}
+
+enum MatchStatus {
+  PENDING
+  ACCEPTED
+  COMPLETED
+  CANCELLED
+  DECLINED
+}

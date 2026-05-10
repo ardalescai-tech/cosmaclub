@@ -9,6 +9,7 @@ const navLinks = [
   { label: "Coaches", href: "/coaches" },
   { label: "Competitions", href: "/competitions" },
   { label: "Leaderboard", href: "/leaderboard" },
+  { label: "Matches", href: "/matches" },
   { label: "Shop", href: "/shop" },
 ];
 
