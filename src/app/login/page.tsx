@@ -5,22 +5,33 @@ import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen bg-[#E6F1FB] flex flex-col items-center justify-center px-6">
-      <Link href="/" className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 bg-[#0C447C] rounded-full flex items-center justify-center">
-          <span className="text-white font-bold text-sm">CC</span>
+    <main className="min-h-screen flex flex-col items-center justify-center px-6 relative"
+      style={{ background: "#0C0D14" }}>
+
+      {/* Background glow */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: "radial-gradient(ellipse at 50% 0%, rgba(56,101,255,0.15) 0%, transparent 60%)"
+      }} />
+
+      <Link href="/" className="flex items-center gap-2 mb-10 relative z-10">
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-lg"
+          style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+          N
         </div>
-        <span className="text-[#0C447C] font-semibold text-xl">NovaClub</span>
+        <span className="font-semibold text-white text-xl">NovaClub</span>
       </Link>
 
-      <div className="bg-white border border-gray-200 rounded-xl p-8 w-full max-w-md shadow-sm">
-        <h2 className="text-xl font-semibold text-gray-800 mb-1">Sign in to NovaClub</h2>
-        <p className="text-gray-500 text-sm mb-6">Join our community tennis club in Motherwell.</p>
+      <div className="relative z-10 w-full max-w-md rounded-2xl p-8"
+        style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
 
+        <h2 className="text-2xl font-bold text-white mb-1">Welcome back!</h2>
+        <p className="text-sm mb-8" style={{ color: "#A0A3B1" }}>Log in to continue</p>
+
+        {/* Google */}
         <button
           onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-          className="w-full border border-gray-200 rounded-lg py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 mb-3"
-        >
+          className="w-full flex items-center justify-center gap-3 py-3 rounded-xl text-sm font-medium transition-all mb-3 hover:opacity-90"
+          style={{ background: "#13141F", border: "1px solid #2A2B3D", color: "#fff" }}>
           <svg className="w-4 h-4" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -30,11 +41,27 @@ export default function LoginPage() {
           Continue with Google
         </button>
 
-        <p className="text-xs text-gray-400 text-center mt-4">
+        {/* Discord placeholder */}
+        <button
+          className="w-full flex items-center justify-center gap-3 py-3 rounded-xl text-sm font-medium mb-6"
+          style={{ background: "#13141F", border: "1px solid #2A2B3D", color: "#6B6E80", cursor: "not-allowed" }}>
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#5865F2">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.003.028.015.056.036.074a19.886 19.886 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
+          </svg>
+          Continue with Discord
+          <span className="text-xs ml-1" style={{ color: "#6B6E80" }}>(soon)</span>
+        </button>
+
+        <p className="text-xs text-center" style={{ color: "#6B6E80" }}>
+          Don't have an account?{" "}
+          <span className="cursor-pointer" style={{ color: "#3865FF" }}>Sign up</span>
+        </p>
+
+        <p className="text-xs text-center mt-4" style={{ color: "#6B6E80" }}>
           By signing in you agree to our{" "}
-          <Link href="/terms" className="underline hover:text-gray-600">Terms</Link>{" "}
+          <Link href="/terms" style={{ color: "#3865FF" }}>Terms</Link>{" "}
           and{" "}
-          <Link href="/privacy" className="underline hover:text-gray-600">Privacy Policy</Link>
+          <Link href="/privacy" style={{ color: "#3865FF" }}>Privacy Policy</Link>
         </p>
       </div>
     </main>

@@ -17,18 +17,21 @@ type Match = {
   opponent: { userId: string };
 };
 
-const statusColors: Record<string, string> = {
-  PENDING: "bg-yellow-100 text-yellow-800",
-  ACCEPTED: "bg-blue-100 text-blue-800",
-  COMPLETED: "bg-green-100 text-green-800",
-  DECLINED: "bg-red-100 text-red-800",
-  CANCELLED: "bg-gray-100 text-gray-600",
+const statusConfig: Record<string, { label: string; bg: string; color: string }> = {
+  PENDING: { label: "Pending", bg: "rgba(255,184,0,0.15)", color: "#FFB800" },
+  ACCEPTED: { label: "Accepted", bg: "rgba(56,101,255,0.15)", color: "#3865FF" },
+  COMPLETED: { label: "Completed", bg: "rgba(0,212,170,0.15)", color: "#00D4AA" },
+  DECLINED: { label: "Declined", bg: "rgba(255,77,106,0.15)", color: "#FF4D6A" },
+  CANCELLED: { label: "Cancelled", bg: "rgba(107,110,128,0.15)", color: "#6B6E80" },
 };
+
+const tabs = ["All", "Upcoming", "History"];
 
 export default function MatchesPage() {
   const { data: session } = useSession();
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("All");
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -45,28 +48,52 @@ export default function MatchesPage() {
   }, [session]);
 
   return (
-    <main className="min-h-screen">
-      <section className="bg-[#E6F1FB] px-6 py-12">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-semibold text-[#0C447C] mb-2">Match History</h1>
-          <p className="text-gray-600">All your matches — pending, completed and past challenges.</p>
+    <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
+
+      <section className="px-6 py-12 max-w-6xl mx-auto">
+        <h1 className="text-4xl font-bold text-white mb-2">My Matches</h1>
+        <p style={{ color: "#A0A3B1" }}>Track your challenges and results.</p>
+      </section>
+
+      {/* TABS */}
+      <section className="px-6 max-w-6xl mx-auto mb-8">
+        <div className="flex gap-2">
+          {tabs.map((tab) => (
+            <button key={tab}
+              onClick={() => setActiveTab(tab)}
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+              style={{
+                background: activeTab === tab ? "#3865FF" : "#1A1B2E",
+                color: activeTab === tab ? "#fff" : "#A0A3B1",
+                border: "1px solid #2A2B3D",
+              }}>
+              {tab}
+            </button>
+          ))}
         </div>
       </section>
 
-      <section className="px-6 py-10 max-w-4xl mx-auto">
+      <section className="px-6 pb-16 max-w-6xl mx-auto">
         {!session ? (
-          <div className="bg-white border border-gray-200 rounded-xl p-8 text-center shadow-sm">
-            <p className="text-gray-500 text-sm mb-4">Sign in to see your match history.</p>
-            <Link href="/login" className="bg-[#185FA5] text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-[#0C447C] transition-colors">
+          <div className="rounded-xl p-10 text-center" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+            <p className="text-white font-semibold mb-2">Sign in to see your matches</p>
+            <p className="text-sm mb-6" style={{ color: "#A0A3B1" }}>Challenge players and track your ELO progress.</p>
+            <Link href="/login"
+              className="px-6 py-2.5 rounded-xl text-sm font-medium text-white"
+              style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
               Sign In
             </Link>
           </div>
         ) : loading ? (
-          <div className="text-center text-gray-400 text-sm py-8">Loading...</div>
+          <div className="text-center py-12" style={{ color: "#A0A3B1" }}>Loading...</div>
         ) : matches.length === 0 ? (
-          <div className="bg-white border border-gray-200 rounded-xl p-8 text-center shadow-sm">
-            <p className="text-gray-500 text-sm mb-4">No matches yet. Challenge someone from the leaderboard!</p>
-            <Link href="/leaderboard" className="bg-[#185FA5] text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-[#0C447C] transition-colors">
+          <div className="rounded-xl p-10 text-center" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+            <p className="text-4xl mb-4">🎾</p>
+            <p className="text-white font-semibold mb-2">No matches yet</p>
+            <p className="text-sm mb-6" style={{ color: "#A0A3B1" }}>Challenge someone from the leaderboard to get started!</p>
+            <Link href="/leaderboard"
+              className="px-6 py-2.5 rounded-xl text-sm font-medium text-white"
+              style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
               View Leaderboard
             </Link>
           </div>
@@ -78,22 +105,29 @@ export default function MatchesPage() {
               const theirScore = isChallenger ? match.scoreOpponent : match.scoreChallenger;
               const myEloChange = isChallenger ? match.eloChangeChal : match.eloChangeOpp;
               const won = myScore !== null && theirScore !== null && myScore > theirScore;
+              const status = statusConfig[match.status];
 
               return (
-                <div key={match.id} className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+                <div key={match.id} className="rounded-xl p-5"
+                  style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusColors[match.status]}`}>
-                          {match.status}
+                        <span className="text-xs px-2.5 py-1 rounded-full font-medium"
+                          style={{ background: status.bg, color: status.color }}>
+                          {status.label}
                         </span>
                         {match.status === "COMPLETED" && (
-                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${won ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                          <span className="text-xs px-2.5 py-1 rounded-full font-medium"
+                            style={{
+                              background: won ? "rgba(0,212,170,0.15)" : "rgba(255,77,106,0.15)",
+                              color: won ? "#00D4AA" : "#FF4D6A",
+                            }}>
                             {won ? "WIN" : "LOSS"}
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm" style={{ color: "#A0A3B1" }}>
                         {isChallenger ? "You challenged" : "Challenge received"} &nbsp;·&nbsp;
                         {match.sessionDate
                           ? new Date(match.sessionDate).toLocaleDateString("en-GB")
@@ -104,47 +138,41 @@ export default function MatchesPage() {
                     <div className="text-right">
                       {match.status === "COMPLETED" && myScore !== null ? (
                         <>
-                          <p className="text-xl font-semibold text-gray-800">
-                            {myScore} — {theirScore}
-                          </p>
+                          <p className="text-2xl font-bold text-white">{myScore} — {theirScore}</p>
                           {myEloChange !== null && (
-                            <p className={`text-sm font-medium ${myEloChange > 0 ? "text-green-600" : "text-red-600"}`}>
+                            <p className="text-sm font-medium" style={{ color: myEloChange > 0 ? "#00D4AA" : "#FF4D6A" }}>
                               {myEloChange > 0 ? "+" : ""}{myEloChange} ELO
                             </p>
                           )}
                         </>
-                      ) : match.status === "PENDING" ? (
+                      ) : match.status === "PENDING" && !isChallenger ? (
                         <div className="flex gap-2">
-                          {!isChallenger && (
-                            <>
-                              <button
-                                onClick={async () => {
-                                  await fetch(`/api/matches/${match.id}`, {
-                                    method: "PUT",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({ action: "accept" }),
-                                  });
-                                  window.location.reload();
-                                }}
-                                className="bg-green-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-green-700"
-                              >
-                                Accept
-                              </button>
-                              <button
-                                onClick={async () => {
-                                  await fetch(`/api/matches/${match.id}`, {
-                                    method: "PUT",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({ action: "decline" }),
-                                  });
-                                  window.location.reload();
-                                }}
-                                className="bg-red-100 text-red-700 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-red-200"
-                              >
-                                Decline
-                              </button>
-                            </>
-                          )}
+                          <button
+                            onClick={async () => {
+                              await fetch(`/api/matches/${match.id}`, {
+                                method: "PUT",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ action: "accept" }),
+                              });
+                              window.location.reload();
+                            }}
+                            className="px-3 py-1.5 rounded-lg text-xs font-medium text-white"
+                            style={{ background: "#00D4AA" }}>
+                            Accept
+                          </button>
+                          <button
+                            onClick={async () => {
+                              await fetch(`/api/matches/${match.id}`, {
+                                method: "PUT",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ action: "decline" }),
+                              });
+                              window.location.reload();
+                            }}
+                            className="px-3 py-1.5 rounded-lg text-xs font-medium"
+                            style={{ background: "rgba(255,77,106,0.15)", color: "#FF4D6A" }}>
+                            Decline
+                          </button>
                         </div>
                       ) : null}
                     </div>
@@ -156,16 +184,13 @@ export default function MatchesPage() {
         )}
       </section>
 
-      <footer className="bg-[#042C53] px-6 py-8 mt-12">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <div>
-            <p className="text-white font-semibold">NovaClub</p>
-            <p className="text-white/50 text-sm">Non-profit community tennis club · Scotland</p>
-          </div>
+      <footer className="px-6 py-8 border-t" style={{ borderColor: "#2A2B3D" }}>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="font-semibold text-white">NovaClub</p>
           <div className="flex gap-6">
-            <Link href="/terms" className="text-white/50 text-sm hover:text-white">Terms</Link>
-            <Link href="/privacy" className="text-white/50 text-sm hover:text-white">Privacy</Link>
-            <Link href="/contact" className="text-white/50 text-sm hover:text-white">Contact</Link>
+            {["Terms", "Privacy", "Cookies", "Contact"].map((item) => (
+              <Link key={item} href={`/${item.toLowerCase()}`} className="text-sm" style={{ color: "#6B6E80" }}>{item}</Link>
+            ))}
           </div>
         </div>
       </footer>
