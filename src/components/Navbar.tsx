@@ -16,6 +16,9 @@ export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
 
+  // Nu afișa navbar pe paginile de admin sau login
+  if (pathname.startsWith("/admin") || pathname.startsWith("/login")) return null;
+
   return (
     <nav className="bg-[#0C447C] px-6 py-4 flex items-center justify-between">
       <Link href="/" className="flex items-center gap-3">
@@ -44,10 +47,7 @@ export default function Navbar() {
       <div className="flex items-center gap-3">
         {session ? (
           <>
-            <Link
-              href="/dashboard"
-              className="text-white/80 hover:text-white text-sm"
-            >
+            <Link href="/dashboard" className="text-white/80 hover:text-white text-sm">
               Dashboard
             </Link>
             <button
@@ -59,16 +59,10 @@ export default function Navbar() {
           </>
         ) : (
           <>
-            <Link
-              href="/login"
-              className="text-white/80 hover:text-white text-sm"
-            >
+            <Link href="/login" className="text-white/80 hover:text-white text-sm">
               Login
             </Link>
-            <Link
-              href="/donate"
-              className="bg-white text-[#0C447C] px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-50"
-            >
+            <Link href="/donate" className="bg-white text-[#0C447C] px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-50">
               Donate
             </Link>
           </>
