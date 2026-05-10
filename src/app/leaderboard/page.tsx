@@ -1,106 +1,117 @@
 import Link from "next/link";
 
 const players = [
-  { rank: 1, name: "James Mitchell", elo: 1240, wins: 18, losses: 4, winRate: 82 },
-  { rank: 2, name: "Sophie Reid", elo: 1185, wins: 14, losses: 6, winRate: 70 },
-  { rank: 3, name: "Alex Kerr", elo: 1160, wins: 12, losses: 5, winRate: 71 },
-  { rank: 4, name: "David Brown", elo: 1095, wins: 9, losses: 8, winRate: 53 },
-  { rank: 5, name: "Emma Wilson", elo: 1050, wins: 7, losses: 7, winRate: 50 },
-  { rank: 6, name: "Liam Thomson", elo: 1020, wins: 6, losses: 9, winRate: 40 },
-  { rank: 7, name: "Chloe Stewart", elo: 990, wins: 4, losses: 8, winRate: 33 },
-  { rank: 8, name: "Ryan MacDonald", elo: 965, wins: 3, losses: 10, winRate: 23 },
+  { rank: 1, name: "Alex Morgan", initials: "AM", elo: 2450, wins: 18, losses: 4, winRate: 82, streak: 5 },
+  { rank: 2, name: "David Roberts", initials: "DR", elo: 2300, wins: 14, losses: 6, winRate: 70, streak: 3 },
+  { rank: 3, name: "Sophie Reid", initials: "SR", elo: 2100, wins: 12, losses: 5, winRate: 71, streak: 2 },
+  { rank: 4, name: "Daniel Lee", initials: "DL", elo: 1960, wins: 9, losses: 8, winRate: 53, streak: 0 },
+  { rank: 5, name: "Michael Chen", initials: "MC", elo: 1850, wins: 7, losses: 7, winRate: 50, streak: 1 },
+  { rank: 6, name: "Arda Example", initials: "AE", elo: 1800, wins: 6, losses: 9, winRate: 40, streak: 0 },
+  { rank: 7, name: "James Wilson", initials: "JW", elo: 1750, wins: 5, losses: 10, winRate: 33, streak: 0 },
 ];
 
-const medalColors: Record<number, string> = {
-  1: "text-yellow-500",
-  2: "text-gray-400",
-  3: "text-orange-400",
-};
+const tabs = ["Global", "Friends", "Club"];
 
 export default function LeaderboardPage() {
   return (
-    <main className="min-h-screen">
-      
-      {/* HEADER */}
-      <section className="bg-[#E6F1FB] px-6 py-12">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-semibold text-[#0C447C] mb-2">Leaderboard</h1>
-          <p className="text-gray-600">Players ranked by ELO rating. Win matches to climb the rankings.</p>
+    <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
+
+      <section className="px-6 py-12 max-w-6xl mx-auto">
+        <h1 className="text-4xl font-bold text-white mb-2">Leaderboard</h1>
+        <p style={{ color: "#A0A3B1" }}>Top players in the NovaClub community.</p>
+      </section>
+
+      {/* TABS */}
+      <section className="px-6 max-w-6xl mx-auto mb-8">
+        <div className="flex gap-2">
+          {tabs.map((tab) => (
+            <button key={tab}
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+              style={{
+                background: tab === "Global" ? "#3865FF" : "#1A1B2E",
+                color: tab === "Global" ? "#fff" : "#A0A3B1",
+                border: "1px solid #2A2B3D",
+              }}>
+              {tab}
+            </button>
+          ))}
         </div>
       </section>
 
       {/* TOP 3 */}
-      <section className="px-6 py-8 max-w-4xl mx-auto">
-        <div className="grid grid-cols-3 gap-4 mb-8">
+      <section className="px-6 max-w-6xl mx-auto mb-8">
+        <div className="grid grid-cols-3 gap-4">
           {players.slice(0, 3).map((player) => (
-            <div key={player.rank} className={`bg-white border rounded-xl p-5 text-center shadow-sm ${player.rank === 1 ? "border-yellow-300" : "border-gray-200"}`}>
-              <p className={`text-3xl mb-2 ${medalColors[player.rank]}`}>
+            <div key={player.rank} className="rounded-xl p-5 text-center"
+              style={{
+                background: "#1A1B2E",
+                border: player.rank === 1 ? "1px solid rgba(56,101,255,0.5)" : "1px solid #2A2B3D",
+              }}>
+              <p className="text-2xl mb-2">
                 {player.rank === 1 ? "🥇" : player.rank === 2 ? "🥈" : "🥉"}
               </p>
-              <div className="w-12 h-12 bg-[#B5D4F4] rounded-full flex items-center justify-center mx-auto mb-2">
-                <span className="text-[#0C447C] font-semibold text-sm">
-                  {player.name.split(" ").map(n => n[0]).join("")}
-                </span>
+              <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3 text-white font-bold"
+                style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+                {player.initials}
               </div>
-              <p className="font-semibold text-gray-800 text-sm">{player.name}</p>
-              <p className="text-2xl font-bold text-[#0C447C] mt-1">{player.elo}</p>
-              <p className="text-xs text-gray-400">ELO</p>
-              <p className="text-xs text-gray-500 mt-1">{player.wins}W · {player.losses}L</p>
+              <p className="font-semibold text-white text-sm">{player.name}</p>
+              <p className="text-2xl font-bold mt-1" style={{ color: "#3865FF" }}>{player.elo}</p>
+              <p className="text-xs mt-1" style={{ color: "#6B6E80" }}>{player.wins}W · {player.losses}L</p>
             </div>
           ))}
         </div>
+      </section>
 
-        {/* FULL TABLE */}
-        <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+      {/* FULL TABLE */}
+      <section className="px-6 pb-16 max-w-6xl mx-auto">
+        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid #2A2B3D" }}>
           <table className="w-full">
             <thead>
-              <tr className="bg-[#E6F1FB] text-left">
-                <th className="px-4 py-3 text-xs font-medium text-gray-500">#</th>
-                <th className="px-4 py-3 text-xs font-medium text-gray-500">Player</th>
-                <th className="px-4 py-3 text-xs font-medium text-gray-500">ELO</th>
-                <th className="px-4 py-3 text-xs font-medium text-gray-500 hidden md:table-cell">W</th>
-                <th className="px-4 py-3 text-xs font-medium text-gray-500 hidden md:table-cell">L</th>
-                <th className="px-4 py-3 text-xs font-medium text-gray-500 hidden md:table-cell">Win Rate</th>
-                <th className="px-4 py-3 text-xs font-medium text-gray-500"></th>
+              <tr style={{ background: "#13141F" }}>
+                <th className="px-4 py-3 text-left text-xs font-medium" style={{ color: "#6B6E80" }}>Rank</th>
+                <th className="px-4 py-3 text-left text-xs font-medium" style={{ color: "#6B6E80" }}>Player</th>
+                <th className="px-4 py-3 text-left text-xs font-medium" style={{ color: "#6B6E80" }}>ELO</th>
+                <th className="px-4 py-3 text-left text-xs font-medium hidden md:table-cell" style={{ color: "#6B6E80" }}>Win Rate</th>
+                <th className="px-4 py-3 text-left text-xs font-medium hidden md:table-cell" style={{ color: "#6B6E80" }}>Streak</th>
+                <th className="px-4 py-3 text-left text-xs font-medium" style={{ color: "#6B6E80" }}></th>
               </tr>
             </thead>
             <tbody>
-              {players.map((player) => (
-                <tr key={player.rank} className="border-t border-gray-100 hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm font-medium text-gray-500">
-                    <span className={medalColors[player.rank] ?? "text-gray-400"}>
-                      {player.rank <= 3 ? ["🥇","🥈","🥉"][player.rank-1] : `#${player.rank}`}
+              {players.map((player, i) => (
+                <tr key={player.rank}
+                  style={{ borderTop: "1px solid #2A2B3D", background: i % 2 === 0 ? "#1A1B2E" : "#13141F" }}>
+                  <td className="px-4 py-3 text-sm font-medium" style={{ color: "#A0A3B1" }}>
+                    {player.rank <= 3
+                      ? ["🥇", "🥈", "🥉"][player.rank - 1]
+                      : `#${player.rank}`}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
+                        style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+                        {player.initials}
+                      </div>
+                      <span className="text-sm font-medium text-white">{player.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-sm font-bold" style={{ color: "#3865FF" }}>{player.elo}</td>
+                  <td className="px-4 py-3 hidden md:table-cell">
+                    <div className="flex items-center gap-2">
+                      <div className="w-20 rounded-full h-1.5" style={{ background: "#2A2B3D" }}>
+                        <div className="h-1.5 rounded-full" style={{ width: `${player.winRate}%`, background: "linear-gradient(90deg, #3865FF, #7B2CFF)" }} />
+                      </div>
+                      <span className="text-xs" style={{ color: "#A0A3B1" }}>{player.winRate}%</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 hidden md:table-cell">
+                    <span className="text-sm" style={{ color: player.streak > 0 ? "#00D4AA" : "#6B6E80" }}>
+                      {player.streak > 0 ? `🔥 ${player.streak}` : "—"}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-[#B5D4F4] rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-[#0C447C] font-semibold text-xs">
-                          {player.name.split(" ").map(n => n[0]).join("")}
-                        </span>
-                      </div>
-                      <span className="text-sm font-medium text-gray-800">{player.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm font-semibold text-[#0C447C]">{player.elo}</td>
-                  <td className="px-4 py-3 text-sm text-gray-500 hidden md:table-cell">{player.wins}</td>
-                  <td className="px-4 py-3 text-sm text-gray-500 hidden md:table-cell">{player.losses}</td>
-                  <td className="px-4 py-3 hidden md:table-cell">
-                    <div className="flex items-center gap-2">
-                      <div className="w-16 bg-gray-100 rounded-full h-1.5">
-                        <div
-                          className="bg-[#185FA5] h-1.5 rounded-full"
-                          style={{ width: `${player.winRate}%` }}
-                        />
-                      </div>
-                      <span className="text-xs text-gray-500">{player.winRate}%</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <Link
-                      href={`/challenge/${player.rank}`}
-                      className="text-xs bg-[#E6F1FB] text-[#0C447C] px-3 py-1 rounded-lg hover:bg-[#B5D4F4] transition-colors"
-                    >
+                    <Link href={`/challenge/${player.rank}`}
+                      className="text-xs px-3 py-1.5 rounded-lg font-medium transition-all"
+                      style={{ background: "rgba(56,101,255,0.15)", color: "#3865FF" }}>
                       Challenge
                     </Link>
                   </td>
@@ -111,18 +122,13 @@ export default function LeaderboardPage() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="bg-[#042C53] px-6 py-8 mt-12">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <div>
-            <p className="text-white font-semibold">NovaClub</p>
-            <p className="text-white/50 text-sm">Non-profit community tennis club · Scotland</p>
-          </div>
+      <footer className="px-6 py-8 border-t" style={{ borderColor: "#2A2B3D" }}>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="font-semibold text-white">NovaClub</p>
           <div className="flex gap-6">
-            <Link href="/terms" className="text-white/50 text-sm hover:text-white">Terms</Link>
-            <Link href="/privacy" className="text-white/50 text-sm hover:text-white">Privacy</Link>
-            <Link href="/cookies" className="text-white/50 text-sm hover:text-white">Cookies</Link>
-            <Link href="/contact" className="text-white/50 text-sm hover:text-white">Contact</Link>
+            {["Terms", "Privacy", "Cookies", "Contact"].map((item) => (
+              <Link key={item} href={`/${item.toLowerCase()}`} className="text-sm" style={{ color: "#6B6E80" }}>{item}</Link>
+            ))}
           </div>
         </div>
       </footer>
