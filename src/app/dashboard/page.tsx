@@ -82,7 +82,7 @@ export default function DashboardPage() {
             { label: "ELO Rating", value: stats?.elo.toString() ?? "1000", sub: "Your rating", icon: "📊" },
             { label: "Matches Played", value: totalMatches.toString(), sub: "Total", icon: "🎾" },
             { label: "Win Rate", value: winRate !== null ? `${winRate}%` : "—", sub: totalMatches > 0 ? `${stats?.wins}W ${stats?.losses}L` : "No matches yet", icon: "📈" },
-            { label: "Club Rank", value: stats?.rank !== null ? `#${stats?.rank}` : "—", sub: "Play to rank", icon: "🏆" },
+           { label: "Club Rank", value: stats?.rank ? `#${stats.rank}` : "—", sub: "Play to rank", icon: "🏆" },
           ].map((stat) => (
             <div key={stat.label} className="rounded-xl p-5"
               style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
