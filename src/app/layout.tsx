@@ -7,7 +7,7 @@ import Navbar from "@/components/Navbar";
 export const metadata: Metadata = {
   title: "NovaClub — Community Tennis Club",
   description:
-    "A non-profit community tennis club based in Scotland. Join us for sessions, coaching, competitions and more.",
+    "The next generation community tennis club. Play, compete, belong.",
 };
 
 export default function RootLayout({
@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body style={{ fontFamily: "'Poppins', sans-serif" }}>
         <SessionProvider>
           <Navbar />
           {children}

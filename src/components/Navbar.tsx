@@ -17,16 +17,18 @@ export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
 
-  // Nu afișa navbar pe paginile de admin sau login
   if (pathname.startsWith("/admin") || pathname.startsWith("/login")) return null;
 
   return (
-    <nav className="bg-[#0C447C] px-6 py-4 flex items-center justify-between">
-      <Link href="/" className="flex items-center gap-3">
-        <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-          <span className="text-[#0C447C] font-bold text-sm">CC</span>
+    <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 border-b"
+      style={{ background: "rgba(12,13,20,0.85)", backdropFilter: "blur(12px)", borderColor: "#2A2B3D" }}>
+
+      <Link href="/" className="flex items-center gap-2">
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm text-white"
+          style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+          N
         </div>
-        <span className="text-white font-semibold text-lg">NovaClub</span>
+        <span className="font-semibold text-white text-lg">NovaClub</span>
       </Link>
 
       <div className="hidden md:flex items-center gap-6">
@@ -34,11 +36,11 @@ export default function Navbar() {
           <Link
             key={link.href}
             href={link.href}
-            className={`text-sm transition-colors ${
-              pathname === link.href
-                ? "text-white font-medium border-b border-white pb-0.5"
-                : "text-white/80 hover:text-white"
-            }`}
+            className="text-sm transition-colors"
+            style={{
+              color: pathname === link.href ? "#3865FF" : "#A0A3B1",
+              fontWeight: pathname === link.href ? "500" : "400",
+            }}
           >
             {link.label}
           </Link>
@@ -48,23 +50,28 @@ export default function Navbar() {
       <div className="flex items-center gap-3">
         {session ? (
           <>
-            <Link href="/dashboard" className="text-white/80 hover:text-white text-sm">
+            <Link href="/dashboard" className="text-sm" style={{ color: "#A0A3B1" }}>
               Dashboard
             </Link>
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="bg-white/10 text-white px-4 py-2 rounded-lg text-sm hover:bg-white/20 transition-colors"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors"
+              style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}
             >
               Sign out
             </button>
           </>
         ) : (
           <>
-            <Link href="/login" className="text-white/80 hover:text-white text-sm">
+            <Link href="/login" className="text-sm" style={{ color: "#A0A3B1" }}>
               Login
             </Link>
-            <Link href="/donate" className="bg-white text-[#0C447C] px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-50">
-              Donate
+            <Link
+              href="/login"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors"
+              style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}
+            >
+              Join Now
             </Link>
           </>
         )}

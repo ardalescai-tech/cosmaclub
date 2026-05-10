@@ -2,67 +2,115 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen">
+    <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
+
       {/* HERO */}
-      <section className="bg-gradient-to-br from-[#0C447C] via-[#185FA5] to-[#378ADD] px-6 py-20 text-center">
-        <span className="inline-block bg-white/15 text-white/90 text-xs px-3 py-1 rounded-full border border-white/30 mb-4">
-          Non-profit · Scotland
-        </span>
-        <h1 className="text-4xl md:text-5xl font-semibold text-white mb-4 leading-tight">
-          Tennis for the<br />whole community
-        </h1>
-        <p className="text-white/80 text-lg max-w-lg mx-auto mb-8">
-          Join our club, book sessions with coaches, enter competitions and support the community.
-        </p>
-        <div className="flex gap-4 justify-center flex-wrap">
-          <Link href="/sessions" className="bg-white text-[#0C447C] px-6 py-3 rounded-lg font-medium hover:bg-blue-50">
-            View Sessions
-          </Link>
-          <Link href="/donate" className="border border-white/50 text-white px-6 py-3 rounded-lg font-medium hover:bg-white/10">
-            Donate Equipment
-          </Link>
+      <section className="relative px-6 py-24 md:py-32 max-w-6xl mx-auto">
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: "radial-gradient(ellipse at 20% 50%, rgba(56,101,255,0.15) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(123,44,255,0.1) 0%, transparent 60%)"
+        }} />
+
+        <div className="relative z-10 max-w-2xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-6"
+            style={{ background: "rgba(56,101,255,0.15)", border: "1px solid rgba(56,101,255,0.3)", color: "#3865FF" }}>
+            🎾 Non-profit · Motherwell, Scotland
+          </div>
+
+          <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
+            Play.<br />
+            Compete.<br />
+            <span style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              Belong.
+            </span>
+          </h1>
+
+          <p className="text-lg mb-8" style={{ color: "#A0A3B1" }}>
+            The next generation community tennis club. Book sessions, challenge players, climb the leaderboard.
+          </p>
+
+          <div className="flex gap-4 flex-wrap">
+            <Link href="/sessions"
+              className="px-6 py-3 rounded-xl font-medium text-white transition-all"
+              style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+              Book a Session
+            </Link>
+            <Link href="/competitions"
+              className="px-6 py-3 rounded-xl font-medium transition-all"
+              style={{ background: "#1A1B2E", border: "1px solid #2A2B3D", color: "#A0A3B1" }}>
+              View Competitions
+            </Link>
+          </div>
+        </div>
+
+        {/* STATS */}
+        <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
+          {[
+            { value: "1,200+", label: "Active Players" },
+            { value: "80+", label: "Coaches" },
+            { value: "250+", label: "Competitions" },
+            { value: "15", label: "Cities" },
+          ].map((stat) => (
+            <div key={stat.label} className="rounded-xl p-4 text-center"
+              style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+              <p className="text-2xl font-bold text-white">{stat.value}</p>
+              <p className="text-xs mt-1" style={{ color: "#A0A3B1" }}>{stat.label}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* FEATURES */}
-      <section className="px-6 py-16 max-w-5xl mx-auto">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-10">Everything in one place</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="px-6 py-16 max-w-6xl mx-auto">
+        <h2 className="text-2xl font-semibold text-white text-center mb-4">Everything in one place</h2>
+        <p className="text-center mb-12" style={{ color: "#A0A3B1" }}>
+          Join, play, improve and compete with players of all levels.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { title: "Book Sessions", desc: "Reserve your spot in weekly open play, junior or social sessions.", href: "/sessions" },
-            { title: "Hire a Coach", desc: "One-on-one or group coaching with LTA-qualified coaches.", href: "/coaches" },
-            { title: "Competitions", desc: "Enter club tournaments for all ages and skill levels.", href: "/competitions" },
-            { title: "Club Shop", desc: "Buy personalised NovaClub kit — apparel, bags and accessories.", href: "/shop" },
-            { title: "Donate", desc: "Support the club with equipment or financial donations.", href: "/donate" },
-            { title: "Become a Sponsor", desc: "Partner with us and gain visibility in the community.", href: "/sponsor" },
+            { icon: "🎾", title: "Book Sessions", desc: "Reserve your spot in weekly open play, junior or social sessions.", href: "/sessions" },
+            { icon: "👨‍🏫", title: "Hire a Coach", desc: "One-on-one or group coaching with certified coaches.", href: "/coaches" },
+            { icon: "🏆", title: "Competitions", desc: "Enter tournaments for all ages and skill levels.", href: "/competitions" },
+            { icon: "📊", title: "Track Progress", desc: "See your stats, match history and climb the leaderboard.", href: "/leaderboard" },
           ].map((item) => (
-            <Link key={item.title} href={item.href} className="block bg-[#E6F1FB] border border-[#B5D4F4] rounded-xl p-6 hover:shadow-md transition-shadow">
-              <h3 className="font-semibold text-[#0C447C] mb-2">{item.title}</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
+            <Link key={item.title} href={item.href}
+              className="rounded-xl p-6 transition-all hover:scale-105"
+              style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+              <span className="text-3xl mb-4 block">{item.icon}</span>
+              <h3 className="font-semibold text-white mb-2">{item.title}</h3>
+              <p className="text-sm" style={{ color: "#A0A3B1" }}>{item.desc}</p>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* VENUE */}
-      <section className="bg-[#E6F1FB] px-6 py-12 text-center">
-        <h2 className="text-xl font-semibold text-[#0C447C] mb-2">Where we play</h2>
-        <p className="text-gray-600 mb-1">Braidhurst High School Sports Hall, Motherwell</p>
-        <p className="text-gray-500 text-sm">Sessions run weekly — check the sessions page for times and prices</p>
+      {/* CTA */}
+      <section className="px-6 py-16 max-w-6xl mx-auto">
+        <div className="rounded-2xl p-10 text-center relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, rgba(56,101,255,0.2), rgba(123,44,255,0.2))", border: "1px solid rgba(56,101,255,0.3)" }}>
+          <h2 className="text-3xl font-bold text-white mb-4">Ready to take your game to the next level?</h2>
+          <p className="mb-8" style={{ color: "#A0A3B1" }}>Join NovaClub today.</p>
+          <Link href="/login"
+            className="inline-block px-8 py-3 rounded-xl font-medium text-white"
+            style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+            Join Now
+          </Link>
+        </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-[#042C53] px-6 py-8">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      <footer className="px-6 py-8 border-t" style={{ borderColor: "#2A2B3D" }}>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <div>
-            <p className="text-white font-semibold">NovaClub</p>
-            <p className="text-white/50 text-sm">Non-profit community tennis club · Scotland</p>
+            <p className="font-semibold text-white">NovaClub</p>
+            <p className="text-sm" style={{ color: "#6B6E80" }}>Non-profit community tennis club · Scotland</p>
           </div>
           <div className="flex gap-6">
-            <Link href="/terms" className="text-white/50 text-sm hover:text-white">Terms</Link>
-            <Link href="/privacy" className="text-white/50 text-sm hover:text-white">Privacy</Link>
-            <Link href="/cookies" className="text-white/50 text-sm hover:text-white">Cookies</Link>
-            <Link href="/contact" className="text-white/50 text-sm hover:text-white">Contact</Link>
+            {["Terms", "Privacy", "Cookies", "Contact"].map((item) => (
+              <Link key={item} href={`/${item.toLowerCase()}`} className="text-sm transition-colors hover:text-white" style={{ color: "#6B6E80" }}>
+                {item}
+              </Link>
+            ))}
           </div>
         </div>
       </footer>
