@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import CookieBanner from "@/components/CookieBanner";
 import SessionProvider from "@/components/SessionProvider";
+import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
   title: "NovaClub — Community Tennis Club",
@@ -18,6 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <SessionProvider>
+          <Navbar />
           {children}
           <CookieBanner />
         </SessionProvider>

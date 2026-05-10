@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
@@ -22,35 +22,15 @@ export default function ContactPage() {
 
   return (
     <main className="min-h-screen">
-      {/* NAVBAR */}
-      <nav className="bg-[#0C447C] px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-            <span className="text-[#0C447C] font-bold text-sm">CC</span>
-          </div>
-          <span className="text-white font-semibold text-lg">CosmaClub</span>
-        </Link>
-        <div className="hidden md:flex items-center gap-6">
-          <Link href="/sessions" className="text-white/80 hover:text-white text-sm">Sessions</Link>
-          <Link href="/coaches" className="text-white/80 hover:text-white text-sm">Coaches</Link>
-          <Link href="/competitions" className="text-white/80 hover:text-white text-sm">Competitions</Link>
-          <Link href="/shop" className="text-white/80 hover:text-white text-sm">Shop</Link>
-          <Link href="/donate" className="bg-white text-[#0C447C] px-4 py-2 rounded-lg text-sm font-medium">Donate</Link>
-        </div>
-      </nav>
-
-      {/* HEADER */}
       <section className="bg-[#E6F1FB] px-6 py-12">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-semibold text-[#0C447C] mb-2">Contact Us</h1>
-          <p className="text-gray-600">Get in touch with the CosmaClub team.</p>
+          <p className="text-gray-600">Get in touch with the NovaClub team.</p>
         </div>
       </section>
 
       <section className="px-6 py-10 max-w-4xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-
-          {/* CONTACT INFO */}
           <div>
             <h2 className="text-lg font-semibold text-gray-800 mb-6">Get in touch</h2>
             <div className="space-y-5">
@@ -69,7 +49,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="font-medium text-gray-800 text-sm">Email</p>
-                  <a href="mailto:hello@cosmaclub.org" className="text-[#185FA5] text-sm hover:underline">hello@cosmaclub.org</a>
+                  <a href="mailto:hello@novaclub.org" className="text-[#185FA5] text-sm hover:underline">hello@novaclub.org</a>
                 </div>
               </div>
               <div className="flex gap-4">
@@ -93,7 +73,6 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* FORM */}
           <div>
             {submitted ? (
               <div className="bg-green-50 border border-green-200 rounded-xl p-8 text-center">
@@ -107,33 +86,15 @@ export default function ContactPage() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm text-gray-600 mb-1">Name *</label>
-                    <input
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                      placeholder="Your name"
-                      className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]"
-                    />
+                    <input name="name" value={form.name} onChange={handleChange} placeholder="Your name" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]" />
                   </div>
                   <div>
                     <label className="block text-sm text-gray-600 mb-1">Email *</label>
-                    <input
-                      name="email"
-                      type="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      placeholder="you@example.com"
-                      className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]"
-                    />
+                    <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="you@example.com" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]" />
                   </div>
                   <div>
                     <label className="block text-sm text-gray-600 mb-1">Subject</label>
-                    <select
-                      name="subject"
-                      value={form.subject}
-                      onChange={handleChange}
-                      className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]"
-                    >
+                    <select name="subject" value={form.subject} onChange={handleChange} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]">
                       <option value="">Select a subject</option>
                       <option value="general">General enquiry</option>
                       <option value="membership">Membership</option>
@@ -145,13 +106,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <label className="block text-sm text-gray-600 mb-1">Message *</label>
-                    <textarea
-                      name="message"
-                      value={form.message}
-                      onChange={handleChange}
-                      placeholder="How can we help?"
-                      className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#185FA5] resize-none h-28"
-                    />
+                    <textarea name="message" value={form.message} onChange={handleChange} placeholder="How can we help?" className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#185FA5] resize-none h-28" />
                   </div>
                   <button
                     onClick={handleSubmit}
@@ -167,11 +122,10 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer className="bg-[#042C53] px-6 py-8 mt-12">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <div>
-            <p className="text-white font-semibold">CosmaClub</p>
+            <p className="text-white font-semibold">NovaClub</p>
             <p className="text-white/50 text-sm">Non-profit community tennis club · Scotland</p>
           </div>
           <div className="flex gap-6">

@@ -20,24 +20,7 @@ const medalColors: Record<number, string> = {
 export default function LeaderboardPage() {
   return (
     <main className="min-h-screen">
-      {/* NAVBAR */}
-      <nav className="bg-[#0C447C] px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-            <span className="text-[#0C447C] font-bold text-sm">CC</span>
-          </div>
-          <span className="text-white font-semibold text-lg">NovaClub</span>
-        </Link>
-        <div className="hidden md:flex items-center gap-6">
-          <Link href="/sessions" className="text-white/80 hover:text-white text-sm">Sessions</Link>
-          <Link href="/coaches" className="text-white/80 hover:text-white text-sm">Coaches</Link>
-          <Link href="/competitions" className="text-white/80 hover:text-white text-sm">Competitions</Link>
-          <Link href="/leaderboard" className="text-white text-sm font-medium border-b border-white pb-0.5">Leaderboard</Link>
-          <Link href="/shop" className="text-white/80 hover:text-white text-sm">Shop</Link>
-          <Link href="/donate" className="bg-white text-[#0C447C] px-4 py-2 rounded-lg text-sm font-medium">Donate</Link>
-        </div>
-      </nav>
-
+      
       {/* HEADER */}
       <section className="bg-[#E6F1FB] px-6 py-12">
         <div className="max-w-4xl mx-auto">

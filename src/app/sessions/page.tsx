@@ -74,34 +74,15 @@ const typeLabels: Record<string, string> = {
 export default function SessionsPage() {
   return (
     <main className="min-h-screen">
-      {/* NAVBAR */}
-      <nav className="bg-[#0C447C] px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-            <span className="text-[#0C447C] font-bold text-sm">CC</span>
-          </div>
-          <span className="text-white font-semibold text-lg">CosmaClub</span>
-        </Link>
-        <div className="hidden md:flex items-center gap-6">
-          <Link href="/sessions" className="text-white text-sm font-medium border-b border-white pb-0.5">Sessions</Link>
-          <Link href="/coaches" className="text-white/80 hover:text-white text-sm">Coaches</Link>
-          <Link href="/competitions" className="text-white/80 hover:text-white text-sm">Competitions</Link>
-          <Link href="/shop" className="text-white/80 hover:text-white text-sm">Shop</Link>
-          <Link href="/donate" className="bg-white text-[#0C447C] px-4 py-2 rounded-lg text-sm font-medium">Donate</Link>
-        </div>
-      </nav>
-
-      {/* HEADER */}
       <section className="bg-[#E6F1FB] px-6 py-12">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-semibold text-[#0C447C] mb-2">Sessions</h1>
           <p className="text-gray-600">
-            All sessions are held at the <strong>School Sports Hall</strong>. Prices vary by session type and membership status.
+            All sessions are held at <strong>Braidhurst High School Sports Hall, Motherwell</strong>. Prices vary by session type and membership status.
           </p>
         </div>
       </section>
 
-      {/* PRICING INFO */}
       <section className="px-6 py-6 max-w-4xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-[#E6F1FB] border border-[#B5D4F4] rounded-xl p-4 text-center">
@@ -118,7 +99,6 @@ export default function SessionsPage() {
           </div>
         </div>
 
-        {/* SESSIONS LIST */}
         <div className="flex flex-col gap-4">
           {sessions.map((session) => (
             <div key={session.id} className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
@@ -160,11 +140,10 @@ export default function SessionsPage() {
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer className="bg-[#042C53] px-6 py-8 mt-12">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <div>
-            <p className="text-white font-semibold">CosmaClub</p>
+            <p className="text-white font-semibold">NovaClub</p>
             <p className="text-white/50 text-sm">Non-profit community tennis club · Scotland</p>
           </div>
           <div className="flex gap-6">
