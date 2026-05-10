@@ -19,13 +19,14 @@ function calculateElo(winnerElo: number, loserElo: number) {
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const { action, scoreChallenger, scoreOpponent } = await req.json();
 
     const match = await prisma.match.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: { challenger: true, opponent: true },
     });
 
@@ -33,25 +34,22 @@ export async function PUT(
       return NextResponse.json({ error: "Match not found" }, { status: 404 });
     }
 
-    // ACCEPT match
     if (action === "accept") {
       const updated = await prisma.match.update({
-        where: { id: params.id },
+        where: { id },
         data: { status: "ACCEPTED" },
       });
       return NextResponse.json(updated);
     }
 
-    // DECLINE match
     if (action === "decline") {
       const updated = await prisma.match.update({
-        where: { id: params.id },
+        where: { id },
         data: { status: "DECLINED" },
       });
       return NextResponse.json(updated);
     }
 
-    // COMPLETE match with score + ELO update
     if (action === "complete") {
       if (scoreChallenger === undefined || scoreOpponent === undefined) {
         return NextResponse.json({ error: "Scores required" }, { status: 400 });
@@ -63,7 +61,6 @@ export async function PUT(
         challengerWon ? match.opponent.elo : match.challenger.elo
       );
 
-      // update ELO
       if (challengerWon) {
         await prisma.player.update({
           where: { id: match.challengerId },
@@ -85,7 +82,7 @@ export async function PUT(
       }
 
       const updated = await prisma.match.update({
-        where: { id: params.id },
+        where: { id },
         data: {
           status: "COMPLETED",
           scoreChallenger,
