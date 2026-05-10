@@ -1,116 +1,136 @@
-"use client";
+import Link from "next/link";
+import { prisma } from "@/lib/prisma";
 
-import { useState } from "react";
+const statusConfig: Record<string, { label: string; bg: string; color: string }> = {
+  OPEN: { label: "Registrations Open", bg: "rgba(0,212,170,0.15)", color: "#00D4AA" },
+  UPCOMING: { label: "Coming Soon", bg: "rgba(56,101,255,0.15)", color: "#3865FF" },
+  CLOSED: { label: "Closed", bg: "rgba(255,77,106,0.15)", color: "#FF4D6A" },
+  ONGOING: { label: "Ongoing", bg: "rgba(255,184,0,0.15)", color: "#FFB800" },
+  FINISHED: { label: "Finished", bg: "rgba(107,110,128,0.15)", color: "#6B6E80" },
+};
 
-export default function AdminCompetitionsPage() {
-  const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({
-    title: "",
-    format: "",
-    description: "",
-    startDate: "",
-    endDate: "",
-    entryFee: "",
-    maxPlayers: "",
-    organiser: "",
-    prizes: "",
+const tabs = ["All", "Upcoming", "Ongoing", "Completed"];
+
+export default async function CompetitionsPage() {
+  const competitions = await prisma.competition.findMany({
+    orderBy: { startDate: "asc" },
+    include: {
+      _count: {
+        select: { registrations: true },
+      },
+    },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async () => {
-    const res = await fetch("/api/competitions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: form.title,
-        format: form.format,
-        description: form.description,
-        startDate: new Date(form.startDate),
-        endDate: form.endDate ? new Date(form.endDate) : null,
-        entryFee: parseFloat(form.entryFee) || 0,
-        maxPlayers: form.maxPlayers ? parseInt(form.maxPlayers) : null,
-        status: "UPCOMING",
-      }),
-    });
-    if (res.ok) {
-      setShowForm(false);
-      alert("Competition created!");
-    }
-  };
-
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-800">Competitions</h1>
-          <p className="text-gray-500 text-sm">Manage tournaments and competitions.</p>
-        </div>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-[#185FA5] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#0C447C] transition-colors"
-        >
-          {showForm ? "Cancel" : "+ Add Competition"}
-        </button>
-      </div>
+    <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
+      <section className="px-6 py-12 max-w-6xl mx-auto">
+        <h1 className="text-4xl font-bold text-white mb-2">Competitions</h1>
+        <p style={{ color: "#A0A3B1" }}>Join tournaments and show your skills.</p>
+      </section>
 
-      {showForm && (
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
-          <h2 className="font-semibold text-gray-800 mb-4">New Competition</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Title *</label>
-              <input name="title" value={form.title} onChange={handleChange} placeholder="Summer Championship 2025" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]" />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Format *</label>
-              <input name="format" value={form.format} onChange={handleChange} placeholder="Singles, Mixed Doubles, U14..." className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]" />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Start date *</label>
-              <input name="startDate" type="date" value={form.startDate} onChange={handleChange} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]" />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">End date</label>
-              <input name="endDate" type="date" value={form.endDate} onChange={handleChange} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]" />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Entry fee (£)</label>
-              <input name="entryFee" type="number" value={form.entryFee} onChange={handleChange} placeholder="5" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]" />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Max players</label>
-              <input name="maxPlayers" type="number" value={form.maxPlayers} onChange={handleChange} placeholder="32" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]" />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Organiser</label>
-              <input name="organiser" value={form.organiser} onChange={handleChange} placeholder="NovaClub" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]" />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-600 mb-1">Prizes</label>
-              <input name="prizes" value={form.prizes} onChange={handleChange} placeholder="1st: Trophy + £50, 2nd: Medal..." className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]" />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm text-gray-600 mb-1">Description</label>
-              <textarea name="description" value={form.description} onChange={handleChange} placeholder="Describe the competition..." className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#185FA5] resize-none h-24" />
-            </div>
+      <section className="px-6 max-w-6xl mx-auto mb-8">
+        <div className="flex gap-2">
+          {tabs.map((tab) => (
+            <button key={tab}
+              className="px-4 py-2 rounded-lg text-sm font-medium"
+              style={{
+                background: tab === "All" ? "#3865FF" : "#1A1B2E",
+                color: tab === "All" ? "#fff" : "#A0A3B1",
+                border: "1px solid #2A2B3D",
+              }}>
+              {tab}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="px-6 pb-16 max-w-6xl mx-auto">
+        {competitions.length === 0 ? (
+          <div className="rounded-xl p-10 text-center" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+            <p className="text-4xl mb-3">🏆</p>
+            <p className="text-white font-semibold mb-2">No competitions yet</p>
+            <p className="text-sm" style={{ color: "#A0A3B1" }}>Check back soon — tournaments will be announced shortly.</p>
           </div>
-          <button
-            onClick={handleSubmit}
-            className="bg-[#185FA5] text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-[#0C447C] transition-colors"
-          >
-            Create Competition
-          </button>
-        </div>
-      )}
+        ) : (
+          <div className="flex flex-col gap-4">
+            {competitions.map((comp) => {
+              const status = statusConfig[comp.status] ?? statusConfig["UPCOMING"];
+              const spotsLeft = comp.maxPlayers ? comp.maxPlayers - comp._count.registrations : null;
 
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
-        <div className="p-5 border-b border-gray-100">
-          <p className="text-sm text-gray-500">Competitions will appear here once added.</p>
+              return (
+                <div key={comp.id} className="rounded-xl p-6"
+                  style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-xs px-2.5 py-1 rounded-full font-medium"
+                          style={{ background: status.bg, color: status.color }}>
+                          {status.label}
+                        </span>
+                        {comp.format && (
+                          <span className="text-xs px-2.5 py-1 rounded-full"
+                            style={{ background: "rgba(255,255,255,0.05)", color: "#A0A3B1" }}>
+                            {comp.format}
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="text-xl font-semibold text-white mb-2">{comp.title}</h3>
+                      {comp.description && (
+                        <p className="text-sm mb-4" style={{ color: "#A0A3B1" }}>{comp.description}</p>
+                      )}
+
+                      <div className="flex flex-col gap-1 text-sm" style={{ color: "#A0A3B1" }}>
+                        <p>📅 {new Date(comp.startDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+                          {comp.endDate ? ` – ${new Date(comp.endDate).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}` : ""}
+                        </p>
+                        <p>📍 {comp.location}</p>
+                        {spotsLeft !== null && (
+                          <p>👥 {spotsLeft} of {comp.maxPlayers} spots available</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-start md:items-end gap-4">
+                      <div className="text-left md:text-right">
+                        <p className="text-3xl font-bold text-white">
+                          {comp.entryFee === 0 ? "Free" : `£${comp.entryFee}`}
+                        </p>
+                        <p className="text-xs" style={{ color: "#6B6E80" }}>entry fee</p>
+                      </div>
+
+                      {comp.status === "OPEN" ? (
+                        <Link href={`/competitions/${comp.id}/register`}
+                          className="px-6 py-2.5 rounded-xl text-sm font-medium text-white"
+                          style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+                          Register Now
+                        </Link>
+                      ) : (
+                        <button disabled
+                          className="px-6 py-2.5 rounded-xl text-sm font-medium"
+                          style={{ background: "#1F2038", color: "#6B6E80", border: "1px solid #2A2B3D" }}>
+                          {comp.status === "UPCOMING" ? "Opening Soon" : "Closed"}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      <footer className="px-6 py-8 border-t" style={{ borderColor: "#2A2B3D" }}>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="font-semibold text-white">NovaClub</p>
+          <div className="flex gap-6">
+            {["Terms", "Privacy", "Cookies", "Contact"].map((item) => (
+              <Link key={item} href={`/${item.toLowerCase()}`} className="text-sm" style={{ color: "#6B6E80" }}>{item}</Link>
+            ))}
+          </div>
         </div>
-      </div>
-    </div>
+      </footer>
+    </main>
   );
 }

@@ -50,7 +50,10 @@ export default function Navbar() {
       <div className="flex items-center gap-3">
         {session ? (
           <>
-            <Link href="/dashboard" className="text-sm" style={{ color: "#A0A3B1" }}>
+            <Link href="/donate" className="text-sm transition-colors" style={{ color: "#A0A3B1" }}>
+              Donate
+            </Link>
+            <Link href="/dashboard" className="text-sm transition-colors" style={{ color: "#A0A3B1" }}>
               Dashboard
             </Link>
             <button
@@ -63,7 +66,10 @@ export default function Navbar() {
           </>
         ) : (
           <>
-            <Link href="/login" className="text-sm" style={{ color: "#A0A3B1" }}>
+            <Link href="/donate" className="text-sm transition-colors" style={{ color: "#A0A3B1" }}>
+              Donate
+            </Link>
+            <Link href="/login" className="text-sm transition-colors" style={{ color: "#A0A3B1" }}>
               Login
             </Link>
             <Link
