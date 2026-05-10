@@ -3,17 +3,48 @@
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+type Stats = {
+  elo: number;
+  wins: number;
+  losses: number;
+  rank: number | null;
+};
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [stats, setStats] = useState<Stats | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
     }
   }, [status, router]);
+
+  useEffect(() => {
+    if (session?.user?.id) {
+      fetch("/api/leaderboard")
+        .then((r) => r.json())
+        .then((data) => {
+          if (Array.isArray(data)) {
+            const player = data.find((p: any) => p.userId === session?.user?.id);
+            if (player) {
+              setStats({
+                elo: player.elo,
+                wins: player.wins,
+                losses: player.losses,
+                rank: player.rank,
+              });
+            } else {
+              setStats({ elo: 1000, wins: 0, losses: 0, rank: null });
+            }
+          }
+        })
+        .catch(() => setStats({ elo: 1000, wins: 0, losses: 0, rank: null }));
+    }
+  }, [session]);
 
   if (status === "loading") {
     return (
@@ -25,11 +56,13 @@ export default function DashboardPage() {
 
   if (!session) return null;
 
+  const totalMatches = stats ? stats.wins + stats.losses : 0;
+  const winRate = totalMatches > 0 ? Math.round((stats!.wins / totalMatches) * 100) : null;
+
   return (
     <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
       <section className="px-6 py-10 max-w-6xl mx-auto">
 
-        {/* HEADER */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-white mb-1">
@@ -37,7 +70,7 @@ export default function DashboardPage() {
             </h1>
             <p style={{ color: "#A0A3B1" }}>Here's your NovaClub dashboard.</p>
           </div>
-          <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white"
+          <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white text-lg"
             style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
             {session.user?.name?.charAt(0) ?? "?"}
           </div>
@@ -46,10 +79,10 @@ export default function DashboardPage() {
         {/* STATS */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
-            { label: "ELO Rating", value: "1000", sub: "Starting rating", icon: "📊" },
-            { label: "Matches Played", value: "0", sub: "This month", icon: "🎾" },
-            { label: "Win Rate", value: "—", sub: "No matches yet", icon: "📈" },
-            { label: "Club Rank", value: "—", sub: "Play to rank", icon: "🏆" },
+            { label: "ELO Rating", value: stats?.elo.toString() ?? "1000", sub: "Your rating", icon: "📊" },
+            { label: "Matches Played", value: totalMatches.toString(), sub: "Total", icon: "🎾" },
+            { label: "Win Rate", value: winRate !== null ? `${winRate}%` : "—", sub: totalMatches > 0 ? `${stats?.wins}W ${stats?.losses}L` : "No matches yet", icon: "📈" },
+            { label: "Club Rank", value: stats?.rank !== null ? `#${stats?.rank}` : "—", sub: "Play to rank", icon: "🏆" },
           ].map((stat) => (
             <div key={stat.label} className="rounded-xl p-5"
               style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
@@ -64,7 +97,6 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* QUICK ACTIONS */}
           <div className="md:col-span-2">
             <h2 className="text-lg font-semibold text-white mb-4">Quick actions</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -85,35 +117,36 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* UPCOMING SESSION */}
           <div>
-            <h2 className="text-lg font-semibold text-white mb-4">Upcoming Session</h2>
+            <h2 className="text-lg font-semibold text-white mb-4">Your Profile</h2>
             <div className="rounded-xl p-5" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-xs px-2 py-0.5 rounded-full"
-                  style={{ background: "rgba(56,101,255,0.15)", color: "#3865FF" }}>
-                  Open Play
-                </span>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white"
+                  style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+                  {session.user?.name?.charAt(0) ?? "?"}
+                </div>
+                <div>
+                  <p className="font-semibold text-white text-sm">{session.user?.name}</p>
+                  <p className="text-xs" style={{ color: "#6B6E80" }}>{session.user?.email}</p>
+                </div>
               </div>
-              <p className="font-semibold text-white mb-1">Open Play — Adults</p>
-              <p className="text-sm mb-1" style={{ color: "#A0A3B1" }}>Today · 18:00</p>
-              <p className="text-xs mb-4" style={{ color: "#6B6E80" }}>Braidhurst Sports Hall</p>
-
-              <div className="text-center p-4 rounded-lg mb-4" style={{ background: "#13141F" }}>
-                <p className="text-xs mb-1" style={{ color: "#6B6E80" }}>Starts in</p>
-                <p className="text-2xl font-bold" style={{ color: "#3865FF" }}>02 : 15 : 30</p>
+              <div className="pt-4" style={{ borderTop: "1px solid #2A2B3D" }}>
+                <Link href="/matches"
+                  className="block w-full text-center py-2.5 rounded-xl text-sm font-medium text-white mb-2"
+                  style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+                  View My Matches
+                </Link>
+                <button
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  className="block w-full text-center py-2.5 rounded-xl text-sm font-medium transition-all"
+                  style={{ background: "#13141F", border: "1px solid #2A2B3D", color: "#A0A3B1" }}>
+                  Sign Out
+                </button>
               </div>
-
-              <Link href="/sessions"
-                className="block w-full text-center py-2.5 rounded-xl text-sm font-medium text-white"
-                style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
-                View Sessions
-              </Link>
             </div>
           </div>
         </div>
 
-        {/* RECENT MATCHES */}
         <h2 className="text-lg font-semibold text-white mb-4">Recent matches</h2>
         <div className="rounded-xl p-8 text-center" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
           <p className="text-4xl mb-3">🎾</p>
