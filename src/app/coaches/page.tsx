@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { formatPrice } from "@/lib/utils";
 
 const coaches = [
   {
@@ -8,8 +7,10 @@ const coaches = [
     initials: "JM",
     qualification: "LTA Level 3",
     specialisms: ["Adults", "Juniors", "Competition"],
-    bio: "James has been coaching tennis for over 10 years and specialises in helping players develop their competitive game. He works with all ages and abilities.",
+    bio: "James has been coaching tennis for over 10 years and specialises in helping players develop their competitive game.",
     pricePerHour: 35,
+    rating: 4.9,
+    sessions: 120,
     availability: "Mon, Wed, Fri — evenings & weekends",
   },
   {
@@ -18,8 +19,10 @@ const coaches = [
     initials: "SR",
     qualification: "LTA Level 2",
     specialisms: ["Beginners", "Kids", "Ladies"],
-    bio: "Sophie is passionate about introducing new players to tennis. She specialises in beginner and junior coaching in a fun, encouraging environment.",
+    bio: "Sophie is passionate about introducing new players to tennis in a fun, encouraging environment.",
     pricePerHour: 28,
+    rating: 4.8,
+    sessions: 89,
     availability: "Tue, Thu — afternoons · Saturdays",
   },
   {
@@ -28,59 +31,80 @@ const coaches = [
     initials: "AK",
     qualification: "LTA Level 3",
     specialisms: ["Advanced", "Competition", "Fitness"],
-    bio: "Alex is a former competitive player who now coaches advanced and competition-level players. He focuses on technique, tactics and match fitness.",
+    bio: "Alex is a former competitive player who focuses on technique, tactics and match fitness.",
     pricePerHour: 40,
+    rating: 4.9,
+    sessions: 156,
     availability: "Mon–Fri — mornings · Weekends",
   },
 ];
 
+const specializationColors = [
+  { bg: "rgba(56,101,255,0.15)", color: "#3865FF" },
+  { bg: "rgba(123,44,255,0.15)", color: "#7B2CFF" },
+  { bg: "rgba(0,212,170,0.15)", color: "#00D4AA" },
+];
+
 export default function CoachesPage() {
   return (
-    <main className="min-h-screen">
-      <section className="bg-[#E6F1FB] px-6 py-12">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-semibold text-[#0C447C] mb-2">Coaches</h1>
-          <p className="text-gray-600">
-            Book a one-to-one or group session with one of our LTA-qualified coaches. Payment is taken in full at the time of booking.
-          </p>
-        </div>
+    <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
+
+      <section className="px-6 py-12 max-w-6xl mx-auto">
+        <h1 className="text-4xl font-bold text-white mb-2">Our Coaches</h1>
+        <p style={{ color: "#A0A3B1" }}>Learn from the best. Book a session with our LTA-qualified coaches.</p>
       </section>
 
-      <section className="px-6 py-10 max-w-4xl mx-auto">
-        <div className="flex flex-col gap-6">
+      <section className="px-6 pb-16 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {coaches.map((coach) => (
-            <div key={coach.id} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-20 h-20 rounded-full bg-[#B5D4F4] flex items-center justify-center">
-                    <span className="text-[#0C447C] font-semibold text-xl">{coach.initials}</span>
-                  </div>
+            <div key={coach.id} className="rounded-xl overflow-hidden transition-all hover:scale-105"
+              style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+
+              {/* Avatar area */}
+              <div className="p-6 pb-4 flex items-start gap-4">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 text-xl font-bold text-white"
+                  style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+                  {coach.initials}
                 </div>
                 <div className="flex-1">
-                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-2 mb-3">
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-800">{coach.name}</h3>
-                      <p className="text-sm text-[#185FA5] font-medium">{coach.qualification}</p>
-                    </div>
-                    <div className="text-left md:text-right">
-                      <p className="text-2xl font-semibold text-[#0C447C]">{formatPrice(coach.pricePerHour)}</p>
-                      <p className="text-sm text-gray-400">per hour</p>
-                    </div>
+                  <h3 className="font-semibold text-white text-lg">{coach.name}</h3>
+                  <p className="text-sm" style={{ color: "#3865FF" }}>{coach.qualification}</p>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-xs" style={{ color: "#A0A3B1" }}>⭐ {coach.rating}</span>
+                    <span className="text-xs" style={{ color: "#A0A3B1" }}>·</span>
+                    <span className="text-xs" style={{ color: "#A0A3B1" }}>{coach.sessions} sessions</span>
                   </div>
-                  <p className="text-gray-600 text-sm mb-3">{coach.bio}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {coach.specialisms.map((s) => (
-                      <span key={s} className="bg-[#E6F1FB] text-[#0C447C] text-xs px-3 py-1 rounded-full">
-                        {s}
-                      </span>
-                    ))}
+                </div>
+              </div>
+
+              <div className="px-6 pb-4">
+                <p className="text-sm mb-4" style={{ color: "#A0A3B1" }}>{coach.bio}</p>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {coach.specialisms.map((s, i) => (
+                    <span key={s} className="text-xs px-2.5 py-1 rounded-full font-medium"
+                      style={{
+                        background: specializationColors[i % 3].bg,
+                        color: specializationColors[i % 3].color,
+                      }}>
+                      {s}
+                    </span>
+                  ))}
+                </div>
+
+                <p className="text-xs mb-4" style={{ color: "#6B6E80" }}>
+                  🗓 {coach.availability}
+                </p>
+
+                <div className="flex items-center justify-between pt-4" style={{ borderTop: "1px solid #2A2B3D" }}>
+                  <div>
+                    <p className="text-2xl font-bold text-white">£{coach.pricePerHour}</p>
+                    <p className="text-xs" style={{ color: "#6B6E80" }}>per hour</p>
                   </div>
-                  <p className="text-sm text-gray-500 mb-4">🗓 Available: {coach.availability}</p>
-                  <Link
-                    href={`/book/coach/${coach.id}`}
-                    className="inline-block bg-[#185FA5] text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-[#0C447C] transition-colors"
-                  >
-                    Book a Session
+                  <Link href={`/book/coach/${coach.id}`}
+                    className="px-4 py-2 rounded-xl text-sm font-medium text-white"
+                    style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+                    Book Session
                   </Link>
                 </div>
               </div>
@@ -89,17 +113,13 @@ export default function CoachesPage() {
         </div>
       </section>
 
-      <footer className="bg-[#042C53] px-6 py-8 mt-12">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <div>
-            <p className="text-white font-semibold">NovaClub</p>
-            <p className="text-white/50 text-sm">Non-profit community tennis club · Scotland</p>
-          </div>
+      <footer className="px-6 py-8 border-t" style={{ borderColor: "#2A2B3D" }}>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="font-semibold text-white">NovaClub</p>
           <div className="flex gap-6">
-            <Link href="/terms" className="text-white/50 text-sm hover:text-white">Terms</Link>
-            <Link href="/privacy" className="text-white/50 text-sm hover:text-white">Privacy</Link>
-            <Link href="/cookies" className="text-white/50 text-sm hover:text-white">Cookies</Link>
-            <Link href="/contact" className="text-white/50 text-sm hover:text-white">Contact</Link>
+            {["Terms", "Privacy", "Cookies", "Contact"].map((item) => (
+              <Link key={item} href={`/${item.toLowerCase()}`} className="text-sm" style={{ color: "#6B6E80" }}>{item}</Link>
+            ))}
           </div>
         </div>
       </footer>
