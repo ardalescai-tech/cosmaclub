@@ -1,126 +1,145 @@
 import Link from "next/link";
-import { formatPrice } from "@/lib/utils";
 
 const products = [
   {
     id: "1",
-    name: "NovaClub T-Shirt",
-    description: "Classic fit t-shirt with embroidered NovaClub logo. Available in S, M, L, XL.",
-    price: 22,
-    category: "APPAREL",
-    emoji: "👕",
-    sizes: ["S", "M", "L", "XL"],
+    name: "Pro Carbon Paddle",
+    description: "Professional grade carbon fiber paddle. Perfect for competitive play.",
+    price: 69.99,
+    category: "Equipment",
+    emoji: "🏓",
+    badge: "Best Seller",
+    badgeColor: "#3865FF",
     inStock: true,
   },
   {
     id: "2",
-    name: "NovaClub Cap",
-    description: "Adjustable snapback cap with embroidered logo. One size fits all.",
-    price: 14,
-    category: "APPAREL",
-    emoji: "🧢",
-    sizes: [],
+    name: "Premium Rubber Set",
+    description: "High-performance rubber sheets for advanced players.",
+    price: 34.99,
+    category: "Equipment",
+    emoji: "🎯",
+    badge: null,
+    badgeColor: null,
     inStock: true,
   },
   {
     id: "3",
-    name: "Club Tennis Bag",
-    description: "Spacious racket bag with NovaClub branding. Fits up to 2 rackets.",
-    price: 38,
-    category: "ACCESSORIES",
-    emoji: "🎒",
-    sizes: [],
+    name: "Training Balls (6x)",
+    description: "Professional 3-star training balls. Pack of 6.",
+    price: 12.99,
+    category: "Accessories",
+    emoji: "⚪",
+    badge: "Popular",
+    badgeColor: "#00D4AA",
     inStock: true,
   },
   {
     id: "4",
-    name: "Water Bottle",
-    description: "500ml stainless steel water bottle with NovaClub logo.",
-    price: 10,
-    category: "ACCESSORIES",
-    emoji: "🥤",
-    sizes: [],
+    name: "Sports Bag",
+    description: "Spacious NovaClub branded sports bag with paddle compartment.",
+    price: 44.99,
+    category: "Accessories",
+    emoji: "🎒",
+    badge: null,
+    badgeColor: null,
     inStock: true,
   },
   {
     id: "5",
-    name: "Club Hoodie",
-    description: "Warm pullover hoodie with NovaClub logo. Perfect for training days.",
-    price: 35,
-    category: "APPAREL",
-    emoji: "🧥",
-    sizes: ["S", "M", "L", "XL", "XXL"],
+    name: "NovaClub T-Shirt",
+    description: "Classic fit t-shirt with embroidered NovaClub logo.",
+    price: 22.00,
+    category: "Apparel",
+    emoji: "👕",
+    badge: null,
+    badgeColor: null,
     inStock: true,
   },
   {
     id: "6",
-    name: "Wristbands (pair)",
-    description: "Terry cloth wristbands with NovaClub logo. One size fits all.",
-    price: 6,
-    category: "ACCESSORIES",
-    emoji: "🎽",
-    sizes: [],
+    name: "Club Hoodie",
+    description: "Warm pullover hoodie with NovaClub logo.",
+    price: 35.00,
+    category: "Apparel",
+    emoji: "🧥",
+    badge: "New",
+    badgeColor: "#7B2CFF",
     inStock: false,
   },
 ];
 
-const categoryLabels: Record<string, string> = {
-  APPAREL: "Apparel",
-  ACCESSORIES: "Accessories",
-  EQUIPMENT: "Equipment",
-};
+const tabs = ["All", "Paddles", "Rubbers", "Balls", "Accessories"];
 
 export default function ShopPage() {
   return (
-    <main className="min-h-screen">
-      <section className="bg-[#E6F1FB] px-6 py-12">
-        <div className="max-w-5xl mx-auto">
-          <h1 className="text-3xl font-semibold text-[#0C447C] mb-2">Club Shop</h1>
-          <p className="text-gray-600">
-            Personalised NovaClub kit — every purchase supports the club directly.
-          </p>
+    <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
+
+      <section className="px-6 py-12 max-w-6xl mx-auto">
+        <h1 className="text-4xl font-bold text-white mb-2">Shop</h1>
+        <p style={{ color: "#A0A3B1" }}>Equip yourself for success. Every purchase supports the club.</p>
+      </section>
+
+      {/* TABS */}
+      <section className="px-6 max-w-6xl mx-auto mb-8">
+        <div className="flex gap-2 flex-wrap">
+          {tabs.map((tab) => (
+            <button key={tab}
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+              style={{
+                background: tab === "All" ? "#3865FF" : "#1A1B2E",
+                color: tab === "All" ? "#fff" : "#A0A3B1",
+                border: "1px solid #2A2B3D",
+              }}>
+              {tab}
+            </button>
+          ))}
         </div>
       </section>
 
-      <section className="px-6 py-10 max-w-5xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* PRODUCTS */}
+      <section className="px-6 pb-16 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {products.map((product) => (
-            <div key={product.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
-              <div className="bg-[#E6F1FB] h-40 flex items-center justify-center border-b border-gray-100">
-                <span className="text-6xl">{product.emoji}</span>
-              </div>
-              <div className="p-5 flex flex-col flex-1">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
-                    {categoryLabels[product.category]}
+            <div key={product.id} className="rounded-xl overflow-hidden transition-all hover:scale-105"
+              style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+
+              {/* Image area */}
+              <div className="h-36 flex items-center justify-center relative"
+                style={{ background: "#13141F", borderBottom: "1px solid #2A2B3D" }}>
+                <span className="text-5xl">{product.emoji}</span>
+                {product.badge && (
+                  <span className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full font-medium text-white"
+                    style={{ background: product.badgeColor! }}>
+                    {product.badge}
                   </span>
-                  {!product.inStock && (
-                    <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">
+                )}
+                {!product.inStock && (
+                  <div className="absolute inset-0 flex items-center justify-center"
+                    style={{ background: "rgba(12,13,20,0.7)" }}>
+                    <span className="text-xs font-medium px-3 py-1 rounded-full"
+                      style={{ background: "rgba(255,77,106,0.2)", color: "#FF4D6A" }}>
                       Out of stock
                     </span>
-                  )}
-                </div>
-                <h3 className="font-semibold text-gray-800 mb-1">{product.name}</h3>
-                <p className="text-sm text-gray-500 mb-3 flex-1">{product.description}</p>
-                {product.sizes.length > 0 && (
-                  <div className="flex gap-1 mb-3 flex-wrap">
-                    {product.sizes.map((size) => (
-                      <span key={size} className="text-xs border border-gray-200 px-2 py-0.5 rounded text-gray-600">
-                        {size}
-                      </span>
-                    ))}
                   </div>
                 )}
-                <div className="flex items-center justify-between mt-auto">
-                  <span className="text-xl font-semibold text-[#0C447C]">{formatPrice(product.price)}</span>
+              </div>
+
+              <div className="p-4">
+                <p className="text-xs mb-1" style={{ color: "#6B6E80" }}>{product.category}</p>
+                <h3 className="font-semibold text-white mb-1">{product.name}</h3>
+                <p className="text-xs mb-4" style={{ color: "#A0A3B1" }}>{product.description}</p>
+
+                <div className="flex items-center justify-between">
+                  <p className="text-xl font-bold text-white">£{product.price.toFixed(2)}</p>
                   <button
                     disabled={!product.inStock}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      product.inStock
-                        ? "bg-[#185FA5] text-white hover:bg-[#0C447C]"
-                        : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    }`}
-                  >
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium text-white transition-all"
+                    style={{
+                      background: product.inStock ? "linear-gradient(135deg, #3865FF, #7B2CFF)" : "#1F2038",
+                      color: product.inStock ? "#fff" : "#6B6E80",
+                      cursor: product.inStock ? "pointer" : "not-allowed",
+                    }}>
                     {product.inStock ? "Add to Cart" : "Unavailable"}
                   </button>
                 </div>
@@ -130,17 +149,13 @@ export default function ShopPage() {
         </div>
       </section>
 
-      <footer className="bg-[#042C53] px-6 py-8 mt-12">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <div>
-            <p className="text-white font-semibold">NovaClub</p>
-            <p className="text-white/50 text-sm">Non-profit community tennis club · Scotland</p>
-          </div>
+      <footer className="px-6 py-8 border-t" style={{ borderColor: "#2A2B3D" }}>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="font-semibold text-white">NovaClub</p>
           <div className="flex gap-6">
-            <Link href="/terms" className="text-white/50 text-sm hover:text-white">Terms</Link>
-            <Link href="/privacy" className="text-white/50 text-sm hover:text-white">Privacy</Link>
-            <Link href="/cookies" className="text-white/50 text-sm hover:text-white">Cookies</Link>
-            <Link href="/contact" className="text-white/50 text-sm hover:text-white">Contact</Link>
+            {["Terms", "Privacy", "Cookies", "Contact"].map((item) => (
+              <Link key={item} href={`/${item.toLowerCase()}`} className="text-sm" style={{ color: "#6B6E80" }}>{item}</Link>
+            ))}
           </div>
         </div>
       </footer>
