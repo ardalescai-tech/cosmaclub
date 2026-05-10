@@ -21,98 +21,84 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="min-h-screen">
-      <section className="bg-[#E6F1FB] px-6 py-12">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-semibold text-[#0C447C] mb-2">Contact Us</h1>
-          <p className="text-gray-600">Get in touch with the NovaClub team.</p>
-        </div>
+    <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
+      <section className="px-6 py-12 max-w-4xl mx-auto">
+        <h1 className="text-4xl font-bold text-white mb-2">Contact Us</h1>
+        <p style={{ color: "#A0A3B1" }}>Get in touch with the NovaClub team.</p>
       </section>
 
-      <section className="px-6 py-10 max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <section className="px-6 pb-16 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+          {/* INFO */}
           <div>
-            <h2 className="text-lg font-semibold text-gray-800 mb-6">Get in touch</h2>
-            <div className="space-y-5">
-              <div className="flex gap-4">
-                <div className="w-10 h-10 bg-[#E6F1FB] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-lg">📍</span>
+            <h2 className="font-semibold text-white mb-6">Get in touch</h2>
+            <div className="flex flex-col gap-4">
+              {[
+                { icon: "📍", title: "Venue", value: "Braidhurst High School Sports Hall\nMotherwell, Scotland" },
+                { icon: "✉️", title: "Email", value: "hello@novaclub.org" },
+                { icon: "🕐", title: "Session days", value: "Check the sessions page for current schedule" },
+                { icon: "🎾", title: "About", value: "Non-profit community tennis club serving Motherwell." },
+              ].map((item) => (
+                <div key={item.title} className="flex gap-4 p-4 rounded-xl"
+                  style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+                  <span className="text-xl flex-shrink-0">{item.icon}</span>
+                  <div>
+                    <p className="font-medium text-white text-sm">{item.title}</p>
+                    <p className="text-sm mt-0.5 whitespace-pre-line" style={{ color: "#A0A3B1" }}>{item.value}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium text-gray-800 text-sm">Venue</p>
-                  <p className="text-gray-500 text-sm">Braidhurst High School Sports Hall<br />Motherwell, Scotland</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="w-10 h-10 bg-[#E6F1FB] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-lg">✉️</span>
-                </div>
-                <div>
-                  <p className="font-medium text-gray-800 text-sm">Email</p>
-                  <a href="mailto:hello@novaclub.org" className="text-[#185FA5] text-sm hover:underline">hello@novaclub.org</a>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="w-10 h-10 bg-[#E6F1FB] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-lg">🕐</span>
-                </div>
-                <div>
-                  <p className="font-medium text-gray-800 text-sm">Session days</p>
-                  <p className="text-gray-500 text-sm">Check the sessions page for current schedule</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="w-10 h-10 bg-[#E6F1FB] rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-lg">🎾</span>
-                </div>
-                <div>
-                  <p className="font-medium text-gray-800 text-sm">About the club</p>
-                  <p className="text-gray-500 text-sm">Non-profit community tennis club serving Motherwell and the surrounding area.</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
+          {/* FORM */}
           <div>
             {submitted ? (
-              <div className="bg-green-50 border border-green-200 rounded-xl p-8 text-center">
+              <div className="rounded-xl p-8 text-center" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
                 <p className="text-4xl mb-3">✅</p>
-                <h3 className="text-lg font-semibold text-green-800 mb-2">Message sent!</h3>
-                <p className="text-green-700 text-sm">We'll get back to you within 2 business days.</p>
+                <h3 className="font-semibold text-white mb-2">Message sent!</h3>
+                <p className="text-sm" style={{ color: "#A0A3B1" }}>We'll get back to you within 2 business days.</p>
               </div>
             ) : (
-              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-800 mb-4">Send a message</h2>
-                <div className="space-y-4">
+              <div className="rounded-xl p-6" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+                <h2 className="font-semibold text-white mb-4">Send a message</h2>
+                <div className="flex flex-col gap-4">
                   <div>
-                    <label className="block text-sm text-gray-600 mb-1">Name *</label>
-                    <input name="name" value={form.name} onChange={handleChange} placeholder="Your name" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]" />
+                    <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>Name *</label>
+                    <input name="name" value={form.name} onChange={handleChange} placeholder="Your name"
+                      className="w-full px-4 py-2.5 rounded-xl text-sm outline-none"
+                      style={{ background: "#13141F", border: "1px solid #2A2B3D", color: "#fff" }} />
                   </div>
                   <div>
-                    <label className="block text-sm text-gray-600 mb-1">Email *</label>
-                    <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="you@example.com" className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]" />
+                    <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>Email *</label>
+                    <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="you@example.com"
+                      className="w-full px-4 py-2.5 rounded-xl text-sm outline-none"
+                      style={{ background: "#13141F", border: "1px solid #2A2B3D", color: "#fff" }} />
                   </div>
                   <div>
-                    <label className="block text-sm text-gray-600 mb-1">Subject</label>
-                    <select name="subject" value={form.subject} onChange={handleChange} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#185FA5]">
+                    <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>Subject</label>
+                    <select name="subject" value={form.subject} onChange={handleChange}
+                      className="w-full px-4 py-2.5 rounded-xl text-sm outline-none"
+                      style={{ background: "#13141F", border: "1px solid #2A2B3D", color: "#fff" }}>
                       <option value="">Select a subject</option>
                       <option value="general">General enquiry</option>
                       <option value="membership">Membership</option>
                       <option value="sessions">Sessions & bookings</option>
                       <option value="coaching">Coaching</option>
                       <option value="sponsorship">Sponsorship</option>
-                      <option value="other">Other</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm text-gray-600 mb-1">Message *</label>
-                    <textarea name="message" value={form.message} onChange={handleChange} placeholder="How can we help?" className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#185FA5] resize-none h-28" />
+                    <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>Message *</label>
+                    <textarea name="message" value={form.message} onChange={handleChange} placeholder="How can we help?"
+                      className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
+                      style={{ background: "#13141F", border: "1px solid #2A2B3D", color: "#fff", height: "100px" }} />
                   </div>
-                  <button
-                    onClick={handleSubmit}
+                  <button onClick={handleSubmit}
                     disabled={!form.name || !form.email || !form.message || loading}
-                    className="w-full bg-[#185FA5] text-white py-3 rounded-lg font-medium hover:bg-[#0C447C] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
+                    className="w-full py-3 rounded-xl font-medium text-white transition-all disabled:opacity-50"
+                    style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
                     {loading ? "Sending..." : "Send message"}
                   </button>
                 </div>
@@ -122,16 +108,13 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <footer className="bg-[#042C53] px-6 py-8 mt-12">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <div>
-            <p className="text-white font-semibold">NovaClub</p>
-            <p className="text-white/50 text-sm">Non-profit community tennis club · Scotland</p>
-          </div>
+      <footer className="px-6 py-8 border-t" style={{ borderColor: "#2A2B3D" }}>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="font-semibold text-white">NovaClub</p>
           <div className="flex gap-6">
-            <Link href="/terms" className="text-white/50 text-sm hover:text-white">Terms</Link>
-            <Link href="/privacy" className="text-white/50 text-sm hover:text-white">Privacy</Link>
-            <Link href="/cookies" className="text-white/50 text-sm hover:text-white">Cookies</Link>
+            {["Terms", "Privacy", "Cookies"].map((item) => (
+              <Link key={item} href={`/${item.toLowerCase()}`} className="text-sm" style={{ color: "#6B6E80" }}>{item}</Link>
+            ))}
           </div>
         </div>
       </footer>
