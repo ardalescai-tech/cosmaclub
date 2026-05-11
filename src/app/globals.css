@@ -57,3 +57,39 @@ a {
 ::-webkit-scrollbar-thumb:hover {
   background: #3865FF;
 }
+
+@layer base {
+  input,
+  select,
+  textarea {
+    background-color: #13141F !important;
+    border: 1px solid #2A2B3D !important;
+    color: #ffffff !important;
+    font-family: 'Poppins', sans-serif !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #6B6E80 !important;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none !important;
+    border-color: #3865FF !important;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0px 1000px #13141F inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  select option {
+    background-color: #13141F !important;
+    color: #ffffff !important;
+  }
+}

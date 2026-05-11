@@ -1,142 +1,169 @@
-import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+"use client";
 
-const typeColors: Record<string, string> = {
-  OPEN_PLAY: "#3865FF",
-  JUNIOR: "#00D4AA",
-  SOCIAL: "#7B2CFF",
-  COACHED: "#FFB800",
-};
-
-const typeLabels: Record<string, string> = {
-  OPEN_PLAY: "Open Play",
-  JUNIOR: "Junior",
-  SOCIAL: "Social",
-  COACHED: "Coached",
-};
+import { useState } from "react";
 
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-export default async function SessionsPage() {
-  const sessions = await prisma.playSession.findMany({
-    where: { status: "SCHEDULED" },
-    orderBy: [{ dayOfWeek: "asc" }, { startTime: "asc" }],
-    include: {
-      _count: {
-        select: {
-          bookings: {
-            where: { status: { in: ["PENDING", "CONFIRMED"] } },
-          },
-        },
-      },
-    },
+export default function AdminSessionsPage() {
+  const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({
+    title: "",
+    type: "OPEN_PLAY",
+    dayOfWeek: "1",
+    startTime: "",
+    endTime: "",
+    court: "",
+    priceStd: "",
+    priceMember: "",
+    priceJunior: "",
+    maxPlayers: "",
   });
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    if (!form.title || !form.startTime || !form.endTime || !form.priceStd || !form.priceMember) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch("/api/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          dayOfWeek: parseInt(form.dayOfWeek),
+          priceStd: parseFloat(form.priceStd),
+          priceMember: parseFloat(form.priceMember),
+          priceJunior: form.priceJunior ? parseFloat(form.priceJunior) : null,
+          maxPlayers: form.maxPlayers ? parseInt(form.maxPlayers) : null,
+        }),
+      });
+      if (res.ok) {
+        setShowForm(false);
+        setForm({ title: "", type: "OPEN_PLAY", dayOfWeek: "1", startTime: "", endTime: "", court: "", priceStd: "", priceMember: "", priceJunior: "", maxPlayers: "" });
+        alert("Session created!");
+        window.location.reload();
+      } else {
+        const err = await res.json();
+        alert("Error: " + (err.error || "Something went wrong"));
+      }
+    } catch (e) {
+      alert("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const inputClass = "w-full px-4 py-2.5 rounded-lg text-sm outline-none";
+
   return (
-    <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
-      <section className="px-6 py-12 max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-2">Sessions</h1>
-        <p style={{ color: "#A0A3B1" }}>
-          Book your spot in weekly sessions at Braidhurst Sports Hall, Motherwell.
-        </p>
-      </section>
+    <div className="p-8">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Sessions</h1>
+          <p className="text-sm" style={{ color: "#A0A3B1" }}>Manage weekly play sessions.</p>
+        </div>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="px-4 py-2 rounded-lg text-sm font-medium text-white"
+          style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+          {showForm ? "Cancel" : "+ Add Session"}
+        </button>
+      </div>
 
-      <section className="px-6 max-w-6xl mx-auto mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[
-            { label: "Standard price", value: "From £5", sub: "per session" },
-            { label: "Member price", value: "From £0", sub: "£25/month membership" },
-            { label: "Junior price", value: "From £3", sub: "ages 8–16" },
-          ].map((item) => (
-            <div key={item.label} className="rounded-xl p-5 text-center"
-              style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
-              <p className="text-sm mb-1" style={{ color: "#A0A3B1" }}>{item.label}</p>
-              <p className="text-2xl font-bold text-white">{item.value}</p>
-              <p className="text-xs mt-1" style={{ color: "#6B6E80" }}>{item.sub}</p>
+      {showForm && (
+        <div className="rounded-xl p-6 mb-6" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+          <h2 className="font-semibold text-white mb-4">New Session</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+            <div>
+              <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>Title *</label>
+              <input name="title" value={form.title} onChange={handleChange}
+                placeholder="Open Play — Adults" className={inputClass} />
             </div>
-          ))}
+
+            <div>
+              <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>Type *</label>
+              <select name="type" value={form.type} onChange={handleChange} className={inputClass}>
+                <option value="OPEN_PLAY">Open Play</option>
+                <option value="JUNIOR">Junior</option>
+                <option value="SOCIAL">Social</option>
+                <option value="COACHED">Coached</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>Day of week *</label>
+              <select name="dayOfWeek" value={form.dayOfWeek} onChange={handleChange} className={inputClass}>
+                {DAY_NAMES.map((day, i) => (
+                  <option key={day} value={i}>{day}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>Court</label>
+              <input name="court" value={form.court} onChange={handleChange}
+                placeholder="Court 1 & 2" className={inputClass} />
+            </div>
+
+            <div>
+              <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>Start time *</label>
+              <input name="startTime" type="time" value={form.startTime} onChange={handleChange}
+                className={inputClass} />
+            </div>
+
+            <div>
+              <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>End time *</label>
+              <input name="endTime" type="time" value={form.endTime} onChange={handleChange}
+                className={inputClass} />
+            </div>
+
+            <div>
+              <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>Standard price (£) *</label>
+              <input name="priceStd" type="number" value={form.priceStd} onChange={handleChange}
+                placeholder="6" className={inputClass} />
+            </div>
+
+            <div>
+              <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>Member price (£) *</label>
+              <input name="priceMember" type="number" value={form.priceMember} onChange={handleChange}
+                placeholder="4" className={inputClass} />
+            </div>
+
+            <div>
+              <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>Junior price (£)</label>
+              <input name="priceJunior" type="number" value={form.priceJunior} onChange={handleChange}
+                placeholder="3" className={inputClass} />
+            </div>
+
+            <div>
+              <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>Max players</label>
+              <input name="maxPlayers" type="number" value={form.maxPlayers} onChange={handleChange}
+                placeholder="20" className={inputClass} />
+            </div>
+
+          </div>
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="px-6 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-50"
+            style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+            {loading ? "Creating..." : "Create Session"}
+          </button>
         </div>
-      </section>
+      )}
 
-      <section className="px-6 pb-16 max-w-6xl mx-auto">
-        {sessions.length === 0 ? (
-          <div className="rounded-xl p-10 text-center" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
-            <p className="text-4xl mb-3">🎾</p>
-            <p className="text-white font-semibold mb-2">No sessions scheduled yet</p>
-            <p className="text-sm" style={{ color: "#A0A3B1" }}>Check back soon — sessions will be added shortly.</p>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {sessions.map((session) => {
-              const spotsLeft = session.maxPlayers
-                ? session.maxPlayers - session._count.bookings
-                : null;
-
-              return (
-                <div key={session.id} className="rounded-xl p-6"
-                  style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-xs px-2.5 py-1 rounded-full font-medium"
-                          style={{
-                            background: `${typeColors[session.type]}20`,
-                            color: typeColors[session.type],
-                          }}>
-                          {typeLabels[session.type]}
-                        </span>
-                        {spotsLeft !== null && (
-                          <span className="text-xs px-2.5 py-1 rounded-full font-medium"
-                            style={{
-                              background: spotsLeft <= 4 ? "rgba(255,77,106,0.15)" : "rgba(0,212,170,0.15)",
-                              color: spotsLeft <= 4 ? "#FF4D6A" : "#00D4AA",
-                            }}>
-                            {spotsLeft} spots left
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="text-lg font-semibold text-white mb-2">{session.title}</h3>
-                      <div className="flex flex-col gap-1">
-                        <p className="text-sm" style={{ color: "#A0A3B1" }}>
-                          📅 {DAY_NAMES[session.dayOfWeek]}s &nbsp;·&nbsp; 🕐 {session.startTime} – {session.endTime}
-                        </p>
-                        <p className="text-sm" style={{ color: "#A0A3B1" }}>
-                          📍 {session.location} {session.court ? `· ${session.court}` : ""}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-start md:items-end gap-3">
-                      <div className="text-left md:text-right">
-                        <p className="text-3xl font-bold text-white">£{session.priceStd}</p>
-                        <p className="text-xs" style={{ color: "#A0A3B1" }}>standard / person</p>
-                        <p className="text-sm font-medium mt-1" style={{ color: "#3865FF" }}>
-                          Members: {session.priceMember === 0 ? "Free" : `£${session.priceMember}`}
-                        </p>
-                      </div>
-                      <Link href={`/book/${session.id}`}
-                        className="px-6 py-2.5 rounded-xl text-sm font-medium text-white"
-                        style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
-                        Book Now
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      <footer className="px-6 py-8 border-t" style={{ borderColor: "#2A2B3D" }}>
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="font-semibold text-white">NovaClub</p>
-          <div className="flex gap-6">
-            {["Terms", "Privacy", "Cookies", "Contact"].map((item) => (
-              <Link key={item} href={`/${item.toLowerCase()}`} className="text-sm" style={{ color: "#6B6E80" }}>{item}</Link>
-            ))}
-          </div>
+      <div className="rounded-xl" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+        <div className="p-5">
+          <p className="text-sm" style={{ color: "#A0A3B1" }}>Sessions appear on the public page once added.</p>
         </div>
-      </footer>
-    </main>
+      </div>
+    </div>
   );
 }
