@@ -18,8 +18,12 @@ export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
+  const role = (session?.user as any)?.role;
 
-  if (pathname.startsWith("/admin") || pathname.startsWith("/login")) return null;
+  if (pathname.startsWith("/admin") || pathname.startsWith("/login") || pathname.startsWith("/captain")) return null;
+
+  const isCaptainOrAbove = ["CAPTAIN", "ADMIN", "OWNER"].includes(role);
+  const isAdminOrOwner = ["ADMIN", "OWNER"].includes(role);
 
   return (
     <>
@@ -54,6 +58,20 @@ export default function Navbar() {
             {session ? (
               <>
                 <Link href="/donate" className="text-sm" style={{ color: "#A0A3B1" }}>Donate</Link>
+                {isCaptainOrAbove && (
+                  <Link href="/captain"
+                    className="text-sm px-3 py-1.5 rounded-lg font-medium"
+                    style={{ background: "rgba(56,101,255,0.15)", color: "#3865FF" }}>
+                    ⚖️ Captain
+                  </Link>
+                )}
+                {isAdminOrOwner && (
+                  <Link href="/admin"
+                    className="text-sm px-3 py-1.5 rounded-lg font-medium"
+                    style={{ background: "rgba(123,44,255,0.15)", color: "#7B2CFF" }}>
+                    Admin
+                  </Link>
+                )}
                 <Link href="/dashboard" className="text-sm" style={{ color: "#A0A3B1" }}>Dashboard</Link>
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
@@ -103,10 +121,8 @@ export default function Navbar() {
       {menuOpen && (
         <div className="fixed inset-0 z-40 md:hidden flex flex-col"
           style={{ background: "#0C0D14", top: "73px" }}>
-
           <div className="flex flex-col px-6 py-8 gap-1 flex-1 overflow-y-auto">
 
-            {/* Nav links */}
             {[{ label: "Home", href: "/" }, ...navLinks].map((link) => (
               <Link key={link.href} href={link.href}
                 onClick={() => setMenuOpen(false)}
@@ -119,16 +135,12 @@ export default function Navbar() {
                   style={{ color: pathname === link.href ? "#3865FF" : "#ffffff" }}>
                   {link.label}
                 </span>
-                {pathname === link.href && (
-                  <span style={{ color: "#3865FF" }}>→</span>
-                )}
+                {pathname === link.href && <span style={{ color: "#3865FF" }}>→</span>}
               </Link>
             ))}
 
-            {/* Divider */}
             <div className="my-4" style={{ borderTop: "1px solid #2A2B3D" }} />
 
-            {/* Auth links */}
             {session ? (
               <>
                 <Link href="/donate" onClick={() => setMenuOpen(false)}
@@ -136,6 +148,20 @@ export default function Navbar() {
                   style={{ color: "#A0A3B1" }}>
                   <span className="text-base">Donate</span>
                 </Link>
+                {isCaptainOrAbove && (
+                  <Link href="/captain" onClick={() => setMenuOpen(false)}
+                    className="flex items-center px-4 py-4 rounded-xl"
+                    style={{ background: "rgba(56,101,255,0.1)", border: "1px solid rgba(56,101,255,0.2)", color: "#3865FF" }}>
+                    <span className="text-base font-medium">⚖️ Captain Panel</span>
+                  </Link>
+                )}
+                {isAdminOrOwner && (
+                  <Link href="/admin" onClick={() => setMenuOpen(false)}
+                    className="flex items-center px-4 py-4 rounded-xl"
+                    style={{ background: "rgba(123,44,255,0.1)", border: "1px solid rgba(123,44,255,0.2)", color: "#7B2CFF" }}>
+                    <span className="text-base font-medium">Admin Panel</span>
+                  </Link>
+                )}
                 <Link href="/dashboard" onClick={() => setMenuOpen(false)}
                   className="flex items-center px-4 py-4 rounded-xl"
                   style={{ color: "#A0A3B1" }}>
