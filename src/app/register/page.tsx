@@ -4,13 +4,14 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
 export default function RegisterPage() {
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
-    dateOfBirth: "",
     address: "",
     city: "",
     postcode: "",
@@ -22,6 +23,7 @@ export default function RegisterPage() {
     medicalNotes: "",
     termsAccepted: false,
   });
+  const [dob, setDob] = useState({ day: "", month: "", year: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -42,10 +44,14 @@ export default function RegisterPage() {
     setLoading(true);
     setError("");
     try {
+      const dateOfBirth = dob.day && dob.month && dob.year
+        ? new Date(`${dob.year}-${String(dob.month).padStart(2, "0")}-${String(dob.day).padStart(2, "0")}`).toISOString()
+        : null;
+
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, dateOfBirth }),
       });
       if (res.ok) {
         setSubmitted(true);
@@ -155,11 +161,41 @@ export default function RegisterPage() {
               <input name="phone" value={form.phone} onChange={handleChange}
                 placeholder="+44 7700 000000" style={inputStyle} />
             </div>
-            <div>
+
+            {/* Date of birth — 3 selects */}
+            <div className="md:col-span-2">
               <label style={labelStyle}>Date of birth</label>
-              <input name="dateOfBirth" type="date" value={form.dateOfBirth} onChange={handleChange}
-                style={{ ...inputStyle, colorScheme: "dark" }} />
+              <div style={{ display: "flex", gap: "8px" }}>
+                <select
+                  value={dob.day}
+                  onChange={(e) => setDob({ ...dob, day: e.target.value })}
+                  style={{ ...inputStyle, width: "30%" }}>
+                  <option value="">Day</option>
+                  {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
+                    <option key={d} value={String(d)}>{d}</option>
+                  ))}
+                </select>
+                <select
+                  value={dob.month}
+                  onChange={(e) => setDob({ ...dob, month: e.target.value })}
+                  style={{ ...inputStyle, width: "40%" }}>
+                  <option value="">Month</option>
+                  {MONTHS.map((m, i) => (
+                    <option key={m} value={String(i + 1)}>{m}</option>
+                  ))}
+                </select>
+                <select
+                  value={dob.year}
+                  onChange={(e) => setDob({ ...dob, year: e.target.value })}
+                  style={{ ...inputStyle, width: "30%" }}>
+                  <option value="">Year</option>
+                  {Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i).map((y) => (
+                    <option key={y} value={String(y)}>{y}</option>
+                  ))}
+                </select>
+              </div>
             </div>
+
             <div>
               <label style={labelStyle}>Member type *</label>
               <select name="memberType" value={form.memberType} onChange={handleChange} style={inputStyle}>
@@ -177,7 +213,7 @@ export default function RegisterPage() {
                 <option value="COMPETITIVE">Competitive — tournament player</option>
               </select>
             </div>
-            <div>
+            <div className="md:col-span-2">
               <label style={labelStyle}>How did you hear about us?</label>
               <select name="heardAboutUs" value={form.heardAboutUs} onChange={handleChange} style={inputStyle}>
                 <option value="">Select...</option>
