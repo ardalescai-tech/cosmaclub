@@ -13,12 +13,26 @@ export default function ContactPage() {
   };
 
   const handleSubmit = async () => {
-    if (!form.name || !form.email || !form.message) return;
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setSubmitted(true);
+  if (!form.name || !form.email || !form.message) return;
+  setLoading(true);
+  try {
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+    if (res.ok) {
+      setSubmitted(true);
+    } else {
+      const data = await res.json();
+      alert(data.error || "Failed to send message. Please try again.");
+    }
+  } catch (err) {
+    alert("Network error. Please try again.");
+  } finally {
     setLoading(false);
-  };
+  }
+};
 
   return (
     <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
