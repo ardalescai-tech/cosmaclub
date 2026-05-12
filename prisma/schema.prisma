@@ -10,7 +10,9 @@ datasource db {
 enum Role {
   MEMBER
   COACH
+  CAPTAIN
   ADMIN
+  OWNER
 }
 
 enum SessionType {
