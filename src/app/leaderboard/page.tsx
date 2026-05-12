@@ -1,34 +1,36 @@
+"use client";
+
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { useEffect, useState } from "react";
 
-export default async function LeaderboardPage() {
-  const players = await prisma.player.findMany({
-    orderBy: { elo: "desc" },
-  });
+type Player = {
+  rank: number;
+  id: string;
+  userId: string;
+  name: string;
+  initials: string;
+  elo: number;
+  wins: number;
+  losses: number;
+  winRate: number;
+};
 
-  const playersWithUsers = await Promise.all(
-    players.map(async (player, index) => {
-      const user = await prisma.user.findUnique({
-        where: { id: player.userId },
-        select: { name: true, email: true },
-      });
-      const totalMatches = player.wins + player.losses;
-      const winRate = totalMatches > 0 ? Math.round((player.wins / totalMatches) * 100) : 0;
-      return {
-        rank: index + 1,
-        id: player.id,
-        userId: player.userId,
-        name: user?.name ?? "Unknown",
-        initials: user?.name ? user.name.split(" ").map((n) => n[0]).join("") : "?",
-        elo: player.elo,
-        wins: player.wins,
-        losses: player.losses,
-        winRate,
-      };
-    })
-  );
+const tabs = ["Global", "Friends", "Club"];
 
-  const tabs = ["Global", "Friends", "Club"];
+export default function LeaderboardPage() {
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("Global");
+
+  useEffect(() => {
+    fetch("/api/leaderboard")
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) setPlayers(data);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
@@ -37,14 +39,16 @@ export default async function LeaderboardPage() {
         <p style={{ color: "#A0A3B1" }}>Top players in the NovaClub community.</p>
       </section>
 
+      {/* Tabs */}
       <section className="px-6 max-w-6xl mx-auto mb-8">
         <div className="flex gap-2">
           {tabs.map((tab) => (
             <button key={tab}
-              className="px-4 py-2 rounded-lg text-sm font-medium"
+              onClick={() => setActiveTab(tab)}
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
               style={{
-                background: tab === "Global" ? "#3865FF" : "#1A1B2E",
-                color: tab === "Global" ? "#fff" : "#A0A3B1",
+                background: activeTab === tab ? "#3865FF" : "#1A1B2E",
+                color: activeTab === tab ? "#fff" : "#A0A3B1",
                 border: "1px solid #2A2B3D",
               }}>
               {tab}
@@ -53,7 +57,26 @@ export default async function LeaderboardPage() {
         </div>
       </section>
 
-      {playersWithUsers.length === 0 ? (
+      {/* Friends/Club placeholder */}
+      {activeTab !== "Global" ? (
+        <section className="px-6 max-w-6xl mx-auto pb-16">
+          <div className="rounded-xl p-10 text-center" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+            <p className="text-4xl mb-3">🔜</p>
+            <p className="text-white font-semibold mb-2">{activeTab} leaderboard coming soon</p>
+            <p className="text-sm" style={{ color: "#A0A3B1" }}>
+              {activeTab === "Friends"
+                ? "Add friends to compare your ELO ratings."
+                : "Club-specific rankings will be available soon."}
+            </p>
+          </div>
+        </section>
+      ) : loading ? (
+        <section className="px-6 max-w-6xl mx-auto pb-16">
+          <div className="rounded-xl p-10 text-center" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+            <p className="text-sm" style={{ color: "#A0A3B1" }}>Loading...</p>
+          </div>
+        </section>
+      ) : players.length === 0 ? (
         <section className="px-6 max-w-6xl mx-auto pb-16">
           <div className="rounded-xl p-10 text-center" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
             <p className="text-4xl mb-3">🏆</p>
@@ -69,10 +92,10 @@ export default async function LeaderboardPage() {
       ) : (
         <>
           {/* TOP 3 */}
-          {playersWithUsers.length >= 3 && (
+          {players.length >= 3 && (
             <section className="px-6 max-w-6xl mx-auto mb-8">
               <div className="grid grid-cols-3 gap-4">
-                {playersWithUsers.slice(0, 3).map((player) => (
+                {players.slice(0, 3).map((player) => (
                   <div key={player.rank} className="rounded-xl p-5 text-center"
                     style={{
                       background: "#1A1B2E",
@@ -94,23 +117,20 @@ export default async function LeaderboardPage() {
             </section>
           )}
 
-          {/* FULL TABLE */}
+          {/* Full table */}
           <section className="px-6 pb-16 max-w-6xl mx-auto">
             <div className="rounded-xl overflow-hidden" style={{ border: "1px solid #2A2B3D" }}>
               <table className="w-full">
                 <thead>
                   <tr style={{ background: "#13141F" }}>
-                    <th className="px-4 py-3 text-left text-xs font-medium" style={{ color: "#6B6E80" }}>Rank</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium" style={{ color: "#6B6E80" }}>Player</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium" style={{ color: "#6B6E80" }}>ELO</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium hidden md:table-cell" style={{ color: "#6B6E80" }}>W</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium hidden md:table-cell" style={{ color: "#6B6E80" }}>L</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium hidden md:table-cell" style={{ color: "#6B6E80" }}>Win Rate</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium" style={{ color: "#6B6E80" }}></th>
+                    {["Rank", "Player", "ELO", "W", "L", "Win Rate", ""].map((h) => (
+                      <th key={h} className={`px-4 py-3 text-left text-xs font-medium ${["W", "L", "Win Rate"].includes(h) ? "hidden md:table-cell" : ""}`}
+                        style={{ color: "#6B6E80" }}>{h}</th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {playersWithUsers.map((player, i) => (
+                  {players.map((player, i) => (
                     <tr key={player.rank}
                       style={{ borderTop: "1px solid #2A2B3D", background: i % 2 === 0 ? "#1A1B2E" : "#13141F" }}>
                       <td className="px-4 py-3 text-sm font-medium" style={{ color: "#A0A3B1" }}>
