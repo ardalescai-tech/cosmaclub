@@ -182,11 +182,11 @@ export default function RegisterPage() {
     <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
       <section className="px-6 py-12 max-w-2xl mx-auto">
 
-        <button onClick={() => setRegType(null)}
-          className="text-sm mb-6 inline-block"
-          style={{ color: "#3865FF" }}>
-          ← Back
-        </button>
+       <button onClick={() => setRegType(null)}
+  className="flex items-center gap-2 text-sm mb-8"
+  style={{ color: "#A0A3B1" }}>
+  ← Back to options
+</button>
 
         <div className="text-center mb-8">
           <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mx-auto mb-4"
