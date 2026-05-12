@@ -19,8 +19,8 @@ export default function Navbar() {
   const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
   const role = (session?.user as any)?.role;
-
-  if (pathname.startsWith("/admin") || pathname.startsWith("/login") || pathname.startsWith("/captain")) return null;
+if (pathname.startsWith("/admin") || pathname.startsWith("/login")) return null;
+  
 
   const isCaptainOrAbove = ["CAPTAIN", "ADMIN", "OWNER"].includes(role);
   const isAdminOrOwner = ["ADMIN", "OWNER"].includes(role);
