@@ -4,9 +4,6 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const competitions = await prisma.competition.findMany({
-      where: {
-        status: { in: ["OPEN", "UPCOMING"] },
-      },
       include: {
         _count: {
           select: { registrations: true },
