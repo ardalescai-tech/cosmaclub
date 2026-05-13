@@ -99,16 +99,17 @@ export default function CoachReviewPage() {
           <div className="mb-6">
             <label className="block text-sm font-medium text-white mb-3">Rating *</label>
             <div className="flex gap-2 justify-center">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  onMouseEnter={() => setHover(star)}
-                  onMouseLeave={() => setHover(0)}
-                  onClick={() => setRating(star)}
-                  className="text-4xl transition-transform hover:scale-110">
-                  {star <= (hover || rating) ? "⭐" : "☆"}
-                </button>
-              ))}
+             {[1, 2, 3, 4, 5].map((star) => (
+  <button
+    key={star}
+    onMouseEnter={() => setHover(star)}
+    onMouseLeave={() => setHover(0)}
+    onClick={() => setRating(star)}
+    className="text-4xl transition-transform hover:scale-110"
+    style={{ color: star <= (hover || rating) ? "#FFB800" : "#2A2B3D" }}>
+    ★
+  </button>
+))}
             </div>
             {rating > 0 && (
               <p className="text-center text-sm mt-2" style={{ color: "#A0A3B1" }}>

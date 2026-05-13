@@ -197,11 +197,11 @@ export default async function CoachProfilePage({ params }: { params: Promise<{ i
                           <span className="text-sm font-medium text-white">{review.user.name ?? "Anonymous"}</span>
                         </div>
                         <div className="flex">
-                          {[1,2,3,4,5].map((s) => (
-                            <span key={s} className="text-sm">
-                              {s <= review.rating ? "⭐" : "☆"}
-                            </span>
-                          ))}
+                         {[1,2,3,4,5].map((s) => (
+  <span key={s} style={{ color: s <= review.rating ? "#FFB800" : "#2A2B3D", fontSize: "14px" }}>
+    ★
+  </span>
+))}
                         </div>
                       </div>
                       {review.comment && (
