@@ -93,6 +93,7 @@ model User {
   donations     Donation[]
   consentLogs   CookieConsent[]
   roleRequests  RoleRequest[]
+  coachReviews CoachReview[]
 
   @@map("users")
 }
@@ -241,6 +242,7 @@ model Coach {
   user         User           @relation(fields: [userId], references: [id])
   bookings     Booking[]
   availability Availability[]
+  reviews CoachReview[]
 
   @@map("coaches")
 }
@@ -450,4 +452,19 @@ enum RequestStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+model CoachReview {
+  id        String   @id @default(cuid())
+  coachId   String
+  userId    String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  coach Coach @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, coachId])
+  @@map("coach_reviews")
 }
