@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
+export const revalidate = 0;
+
 const specializationColors = [
   { bg: "rgba(56,101,255,0.15)", color: "#3865FF" },
   { bg: "rgba(123,44,255,0.15)", color: "#7B2CFF" },
