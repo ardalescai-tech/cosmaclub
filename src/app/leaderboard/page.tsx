@@ -158,7 +158,7 @@ export default function LeaderboardPage() {
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <Link href={`/challenge/${player.userId}`}
+                       <Link href={`/challange/${player.userId}`}
                           className="text-xs px-3 py-1.5 rounded-lg font-medium"
                           style={{ background: "rgba(56,101,255,0.15)", color: "#3865FF" }}>
                           Challenge
