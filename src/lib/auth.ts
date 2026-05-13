@@ -31,12 +31,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             });
           }
 
+          // Creează Player record dacă nu există
+          await prisma.player.upsert({
+            where: { userId: user.id },
+            update: {},
+            create: { userId: user.id, elo: 1000, wins: 0, losses: 0 },
+          });
+
           token.id = user.id;
           token.role = user.role;
           token.email = user.email;
           token.name = user.name;
         } catch (err) {
           console.error("JWT callback error:", err);
+        }
+      } else if (token.email) {
+        try {
+          const user = await prisma.user.findUnique({
+            where: { email: token.email as string },
+            select: { id: true, role: true, name: true },
+          });
+          if (user) {
+            token.id = user.id;
+            token.role = user.role;
+            token.name = user.name;
+          }
+        } catch (err) {
+          console.error("JWT refresh error:", err);
         }
       }
       return token;
