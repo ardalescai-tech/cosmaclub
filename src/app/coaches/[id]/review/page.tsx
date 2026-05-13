@@ -99,15 +99,17 @@ export default function CoachReviewPage() {
           <div className="mb-6">
             <label className="block text-sm font-medium text-white mb-3">Rating *</label>
             <div className="flex gap-2 justify-center">
-             {[1, 2, 3, 4, 5].map((star) => (
+            {[1, 2, 3, 4, 5].map((star) => (
   <button
     key={star}
     onMouseEnter={() => setHover(star)}
     onMouseLeave={() => setHover(0)}
     onClick={() => setRating(star)}
-    className="text-4xl transition-transform hover:scale-110"
-    style={{ color: star <= (hover || rating) ? "#FFB800" : "#2A2B3D" }}>
-    ★
+    style={{ background: "none", padding: "4px" }}>
+    <svg width="36" height="36" viewBox="0 0 24 24" fill={star <= (hover || rating) ? "#FFB800" : "none"}
+      stroke={star <= (hover || rating) ? "#FFB800" : "#2A2B3D"} strokeWidth="1.5">
+      <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+    </svg>
   </button>
 ))}
             </div>
