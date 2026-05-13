@@ -231,6 +231,10 @@ model Coach {
   pricePerHour  Float
   imageUrl      String?
   isActive      Boolean  @default(true)
+  phone         String?
+  experience    Int?
+  instagram     String?
+  twitter       String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

@@ -71,16 +71,23 @@ export default async function CoachesPage() {
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between pt-4"
+                    <div className="flex flex-col gap-2 pt-4"
                       style={{ borderTop: "1px solid #2A2B3D" }}>
-                      <div>
-                        <p className="text-2xl font-bold text-white">£{coach.pricePerHour}</p>
-                        <p className="text-xs" style={{ color: "#6B6E80" }}>per hour</p>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-2xl font-bold text-white">£{coach.pricePerHour}</p>
+                          <p className="text-xs" style={{ color: "#6B6E80" }}>per hour</p>
+                        </div>
+                        <Link href={`/book/coach/${coach.id}`}
+                          className="px-4 py-2 rounded-xl text-sm font-medium text-white"
+                          style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+                          Book Session
+                        </Link>
                       </div>
-                      <Link href={`/book/coach/${coach.id}`}
-                        className="px-4 py-2 rounded-xl text-sm font-medium text-white"
-                        style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
-                        Book Session
+                      <Link href={`/coaches/${coach.id}`}
+                        className="text-xs text-center py-1.5 rounded-lg"
+                        style={{ color: "#3865FF", background: "rgba(56,101,255,0.08)" }}>
+                        View Profile →
                       </Link>
                     </div>
                   </div>

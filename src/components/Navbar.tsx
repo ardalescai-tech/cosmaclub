@@ -19,8 +19,8 @@ export default function Navbar() {
   const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
   const role = (session?.user as any)?.role;
-if (pathname.startsWith("/admin") || pathname.startsWith("/login")) return null;
-  
+
+  if (pathname.startsWith("/admin") || pathname.startsWith("/login")) return null;
 
   const isCaptainOrAbove = ["CAPTAIN", "ADMIN", "OWNER"].includes(role);
   const isAdminOrOwner = ["ADMIN", "OWNER"].includes(role);
@@ -58,6 +58,11 @@ if (pathname.startsWith("/admin") || pathname.startsWith("/login")) return null;
             {session ? (
               <>
                 <Link href="/donate" className="text-sm" style={{ color: "#A0A3B1" }}>Donate</Link>
+                {role === "COACH" && (
+                  <Link href="/profile/coach" className="text-sm" style={{ color: "#A0A3B1" }}>
+                    My Profile
+                  </Link>
+                )}
                 {isCaptainOrAbove && (
                   <Link href="/captain"
                     className="text-sm px-3 py-1.5 rounded-lg font-medium"
@@ -148,6 +153,13 @@ if (pathname.startsWith("/admin") || pathname.startsWith("/login")) return null;
                   style={{ color: "#A0A3B1" }}>
                   <span className="text-base">Donate</span>
                 </Link>
+                {role === "COACH" && (
+                  <Link href="/profile/coach" onClick={() => setMenuOpen(false)}
+                    className="flex items-center px-4 py-4 rounded-xl"
+                    style={{ color: "#A0A3B1" }}>
+                    <span className="text-base">My Profile</span>
+                  </Link>
+                )}
                 {isCaptainOrAbove && (
                   <Link href="/captain" onClick={() => setMenuOpen(false)}
                     className="flex items-center px-4 py-4 rounded-xl"
