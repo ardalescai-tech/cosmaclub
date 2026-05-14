@@ -60,7 +60,7 @@ export default async function HomePage() {
   <div className="absolute inset-0 rounded-2xl"
     style={{ background: "linear-gradient(135deg, rgba(56,101,255,0.2), rgba(123,44,255,0.2))", filter: "blur(40px)" }} />
   <img
-    src="/hero.jpg"
+    src="/hero.png"
     alt="Table tennis player"
     className="relative z-10 w-full rounded-2xl object-cover object-top"
     style={{ maxHeight: "400px" }}
