@@ -16,20 +16,19 @@ export default async function HomePage() {
 
       {/* HERO */}
       <section className="relative min-h-[600px] md:min-h-[700px] flex items-center overflow-hidden">
-        {/* Background image */}
         <div className="absolute inset-0">
           <img
             src="/hero.png"
             alt="Table tennis player"
-            className="w-full h-full object-cover object-right"
+            className="w-full h-full object-cover"
+            style={{ objectPosition: "70% center" }}
           />
           <div className="absolute inset-0"
-            style={{ background: "linear-gradient(to right, rgba(12,13,20,0.97) 0%, rgba(12,13,20,0.85) 50%, rgba(12,13,20,0.3) 100%)" }} />
+            style={{ background: "linear-gradient(to right, rgba(12,13,20,0.92) 0%, rgba(12,13,20,0.6) 50%, rgba(12,13,20,0.15) 100%)" }} />
           <div className="absolute inset-0"
-            style={{ background: "linear-gradient(to top, rgba(12,13,20,1) 0%, transparent 100%)" }} />
+            style={{ background: "linear-gradient(to top, rgba(12,13,20,1) 0%, transparent 40%)" }} />
         </div>
 
-        {/* Content */}
         <div className="relative z-10 px-6 py-24 md:py-32 max-w-6xl mx-auto w-full">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-6"
