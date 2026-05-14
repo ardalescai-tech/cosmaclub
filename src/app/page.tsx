@@ -14,48 +14,83 @@ export default async function HomePage() {
   return (
     <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
 
-      {/* HERO */}
-      <section className="relative min-h-[600px] md:min-h-[700px] flex items-center overflow-hidden">
+      {/* HERO MOBILE */}
+      <section className="md:hidden">
+        <div className="relative w-full" style={{ height: "320px", overflow: "hidden" }}>
+          <img
+            src="/hero-mobile.png"
+            alt="Table tennis player"
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0"
+            style={{ background: "linear-gradient(to bottom, rgba(12,13,20,0.1) 0%, rgba(12,13,20,0.95) 100%)" }} />
+        </div>
+        <div className="px-6 pt-6 pb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-5"
+            style={{ background: "rgba(56,101,255,0.15)", border: "1px solid rgba(56,101,255,0.3)", color: "#3865FF" }}>
+            🎾 Non-profit · Motherwell, Scotland
+          </div>
+          <h1 className="text-4xl font-bold text-white leading-tight mb-4">
+            Play.<br />Compete.<br />
+            <span style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              Belong.
+            </span>
+          </h1>
+          <p className="text-base mb-6" style={{ color: "#A0A3B1" }}>
+            The next generation community tennis club. Book sessions, challenge players, climb the leaderboard.
+          </p>
+          <div className="flex gap-3 flex-wrap">
+            <Link href="/sessions"
+              className="px-5 py-3 rounded-xl font-medium text-white text-sm"
+              style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+              Book a Session
+            </Link>
+            <Link href="/competitions"
+              className="px-5 py-3 rounded-xl font-medium text-sm"
+              style={{ background: "#1A1B2E", border: "1px solid #2A2B3D", color: "#A0A3B1" }}>
+              View Competitions
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* HERO DESKTOP */}
+      <section className="hidden md:flex relative min-h-[700px] items-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src="/hero.png"
             alt="Table tennis player"
             className="w-full h-full object-cover"
-            style={{ objectPosition: "70% center" }}
+            style={{ objectPosition: "center center" }}
           />
           <div className="absolute inset-0"
-            style={{ background: "linear-gradient(to right, rgba(12,13,20,0.92) 0%, rgba(12,13,20,0.6) 50%, rgba(12,13,20,0.15) 100%)" }} />
+            style={{ background: "linear-gradient(to right, rgba(12,13,20,0.95) 0%, rgba(12,13,20,0.7) 50%, rgba(12,13,20,0.2) 100%)" }} />
           <div className="absolute inset-0"
             style={{ background: "linear-gradient(to top, rgba(12,13,20,1) 0%, transparent 40%)" }} />
         </div>
-
-        <div className="relative z-10 px-6 py-24 md:py-32 max-w-6xl mx-auto w-full">
+        <div className="relative z-10 px-6 py-32 max-w-6xl mx-auto w-full">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-6"
               style={{ background: "rgba(56,101,255,0.15)", border: "1px solid rgba(56,101,255,0.3)", color: "#3865FF" }}>
               🎾 Non-profit · Motherwell, Scotland
             </div>
-
-            <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
-              Play.<br />
-              Compete.<br />
+            <h1 className="text-6xl font-bold text-white leading-tight mb-6">
+              Play.<br />Compete.<br />
               <span style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                 Belong.
               </span>
             </h1>
-
             <p className="text-lg mb-8" style={{ color: "#A0A3B1" }}>
               The next generation community tennis club. Book sessions, challenge players, climb the leaderboard.
             </p>
-
             <div className="flex gap-4 flex-wrap">
               <Link href="/sessions"
-                className="px-6 py-3 rounded-xl font-medium text-white transition-all"
+                className="px-6 py-3 rounded-xl font-medium text-white"
                 style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
                 Book a Session
               </Link>
               <Link href="/competitions"
-                className="px-6 py-3 rounded-xl font-medium transition-all"
+                className="px-6 py-3 rounded-xl font-medium"
                 style={{ background: "rgba(26,27,46,0.8)", border: "1px solid #2A2B3D", color: "#A0A3B1" }}>
                 View Competitions
               </Link>
@@ -65,7 +100,7 @@ export default async function HomePage() {
       </section>
 
       {/* STATS */}
-      <section className="px-6 max-w-6xl mx-auto -mt-8 relative z-10 pb-8">
+      <section className="px-6 max-w-6xl mx-auto md:-mt-8 relative z-10 pb-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { value: memberCount.toString(), label: "Members" },
@@ -88,7 +123,6 @@ export default async function HomePage() {
         <p className="text-center mb-12" style={{ color: "#A0A3B1" }}>
           Join, play, improve and compete with players of all levels.
         </p>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { icon: "🎾", title: "Book Sessions", desc: "Reserve your spot in weekly open play, junior or social sessions.", href: "/sessions" },
