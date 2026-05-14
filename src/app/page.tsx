@@ -21,12 +21,12 @@ export default async function HomePage() {
           <img
             src="/hero.png"
             alt="Table tennis player"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-right"
           />
           <div className="absolute inset-0"
             style={{ background: "linear-gradient(to right, rgba(12,13,20,0.97) 0%, rgba(12,13,20,0.85) 50%, rgba(12,13,20,0.3) 100%)" }} />
           <div className="absolute inset-0"
-            style={{ background: "linear-gradient(to top, rgba(12,13,20,1) 0%, transparent 50%)" }} />
+            style={{ background: "linear-gradient(to top, rgba(12,13,20,1) 0%, transparent 100%)" }} />
         </div>
 
         {/* Content */}
