@@ -1,6 +1,16 @@
 import Link from "next/link";
+import { prisma } from "@/lib/prisma";
 
-export default function HomePage() {
+export const revalidate = 0;
+
+export default async function HomePage() {
+  const [memberCount, sessionCount, competitionCount, coachCount] = await Promise.all([
+    prisma.user.count(),
+    prisma.playSession.count({ where: { status: "SCHEDULED" } }),
+    prisma.competition.count(),
+    prisma.coach.count({ where: { isActive: true } }),
+  ]);
+
   return (
     <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
 
@@ -42,13 +52,13 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* STATS */}
+        {/* STATS — date reale din DB */}
         <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
           {[
-            { value: "1,200+", label: "Active Players" },
-            { value: "80+", label: "Coaches" },
-            { value: "250+", label: "Competitions" },
-            { value: "15", label: "Cities" },
+            { value: memberCount.toString(), label: "Members" },
+            { value: sessionCount.toString(), label: "Active Sessions" },
+            { value: competitionCount.toString(), label: "Competitions" },
+            { value: coachCount.toString(), label: "Coaches" },
           ].map((stat) => (
             <div key={stat.label} className="rounded-xl p-4 text-center"
               style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
@@ -90,7 +100,7 @@ export default function HomePage() {
           style={{ background: "linear-gradient(135deg, rgba(56,101,255,0.2), rgba(123,44,255,0.2))", border: "1px solid rgba(56,101,255,0.3)" }}>
           <h2 className="text-3xl font-bold text-white mb-4">Ready to take your game to the next level?</h2>
           <p className="mb-8" style={{ color: "#A0A3B1" }}>Join NovaClub today.</p>
-          <Link href="/login"
+          <Link href="/register"
             className="inline-block px-8 py-3 rounded-xl font-medium text-white"
             style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
             Join Now
