@@ -15,59 +15,76 @@ export default async function HomePage() {
     <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
 
       {/* HERO */}
-      <section className="relative px-6 py-24 md:py-32 max-w-6xl mx-auto">
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: "radial-gradient(ellipse at 20% 50%, rgba(56,101,255,0.15) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(123,44,255,0.1) 0%, transparent 60%)"
-        }} />
+<section className="relative px-6 py-24 md:py-32 max-w-6xl mx-auto overflow-hidden">
+  <div className="absolute inset-0 pointer-events-none" style={{
+    background: "radial-gradient(ellipse at 20% 50%, rgba(56,101,255,0.15) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(123,44,255,0.1) 0%, transparent 60%)"
+  }} />
 
-        <div className="relative z-10 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-6"
-            style={{ background: "rgba(56,101,255,0.15)", border: "1px solid rgba(56,101,255,0.3)", color: "#3865FF" }}>
-            🎾 Non-profit · Motherwell, Scotland
-          </div>
+  <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
 
-          <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
-            Play.<br />
-            Compete.<br />
-            <span style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-              Belong.
-            </span>
-          </h1>
+    {/* Text */}
+    <div className="flex-1 max-w-2xl">
+      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-6"
+        style={{ background: "rgba(56,101,255,0.15)", border: "1px solid rgba(56,101,255,0.3)", color: "#3865FF" }}>
+        🎾 Non-profit · Motherwell, Scotland
+      </div>
 
-          <p className="text-lg mb-8" style={{ color: "#A0A3B1" }}>
-            The next generation community tennis club. Book sessions, challenge players, climb the leaderboard.
-          </p>
+      <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
+        Play.<br />
+        Compete.<br />
+        <span style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          Belong.
+        </span>
+      </h1>
 
-          <div className="flex gap-4 flex-wrap">
-            <Link href="/sessions"
-              className="px-6 py-3 rounded-xl font-medium text-white transition-all"
-              style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
-              Book a Session
-            </Link>
-            <Link href="/competitions"
-              className="px-6 py-3 rounded-xl font-medium transition-all"
-              style={{ background: "#1A1B2E", border: "1px solid #2A2B3D", color: "#A0A3B1" }}>
-              View Competitions
-            </Link>
-          </div>
-        </div>
+      <p className="text-lg mb-8" style={{ color: "#A0A3B1" }}>
+        The next generation community tennis club. Book sessions, challenge players, climb the leaderboard.
+      </p>
 
-        {/* STATS — date reale din DB */}
-        <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
-          {[
-            { value: memberCount.toString(), label: "Members" },
-            { value: sessionCount.toString(), label: "Active Sessions" },
-            { value: competitionCount.toString(), label: "Competitions" },
-            { value: coachCount.toString(), label: "Coaches" },
-          ].map((stat) => (
-            <div key={stat.label} className="rounded-xl p-4 text-center"
-              style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
-              <p className="text-2xl font-bold text-white">{stat.value}</p>
-              <p className="text-xs mt-1" style={{ color: "#A0A3B1" }}>{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <div className="flex gap-4 flex-wrap">
+        <Link href="/sessions"
+          className="px-6 py-3 rounded-xl font-medium text-white transition-all"
+          style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+          Book a Session
+        </Link>
+        <Link href="/competitions"
+          className="px-6 py-3 rounded-xl font-medium transition-all"
+          style={{ background: "#1A1B2E", border: "1px solid #2A2B3D", color: "#A0A3B1" }}>
+          View Competitions
+        </Link>
+      </div>
+    </div>
+
+    {/* Image */}
+<div className="w-full md:flex-1 relative">
+  <div className="absolute inset-0 rounded-2xl"
+    style={{ background: "linear-gradient(135deg, rgba(56,101,255,0.2), rgba(123,44,255,0.2))", filter: "blur(40px)" }} />
+  <img
+    src="/hero.jpg"
+    alt="Table tennis player"
+    className="relative z-10 w-full rounded-2xl object-cover object-top"
+    style={{ maxHeight: "400px" }}
+  />
+</div>
+
+  </div>
+
+  {/* STATS */}
+  <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
+    {[
+      { value: memberCount.toString(), label: "Members" },
+      { value: sessionCount.toString(), label: "Active Sessions" },
+      { value: competitionCount.toString(), label: "Competitions" },
+      { value: coachCount.toString(), label: "Coaches" },
+    ].map((stat) => (
+      <div key={stat.label} className="rounded-xl p-4 text-center"
+        style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+        <p className="text-2xl font-bold text-white">{stat.value}</p>
+        <p className="text-xs mt-1" style={{ color: "#A0A3B1" }}>{stat.label}</p>
+      </div>
+    ))}
+  </div>
+</section>
 
       {/* FEATURES */}
       <section className="px-6 py-16 max-w-6xl mx-auto">
@@ -110,7 +127,7 @@ export default async function HomePage() {
 
       {/* FOOTER */}
       <footer className="px-6 py-8 border-t" style={{ borderColor: "#2A2B3D" }}>
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="relative z-10 flex flex-col-reverse md:flex-row items-center gap-12">
           <div>
             <p className="font-semibold text-white">NovaClub</p>
             <p className="text-sm" style={{ color: "#6B6E80" }}>Non-profit community tennis club · Scotland</p>
