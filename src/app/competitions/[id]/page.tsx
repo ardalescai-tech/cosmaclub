@@ -10,9 +10,10 @@ const statusConfig: Record<string, { label: string; bg: string; color: string }>
   FINISHED: { label: "Finished", bg: "rgba(107,110,128,0.15)", color: "#6B6E80" },
 };
 
-export default async function CompetitionDetailPage({ params }: { params: { id: string } }) {
+export default async function CompetitionDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const competition = await prisma.competition.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { _count: { select: { registrations: true } } },
   });
 
