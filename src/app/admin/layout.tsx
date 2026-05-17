@@ -10,6 +10,7 @@ const navItems = [
   { label: "Sessions", href: "/admin/sessions", icon: "🎾" },
   { label: "Coaches", href: "/admin/coaches", icon: "👨‍🏫" },
   { label: "Competitions", href: "/admin/competitions", icon: "🏆" },
+    { label: "News", href: "/admin/news", icon: "📰" },
   { label: "Shop", href: "/admin/shop", icon: "🛍️" },
   { label: "Members", href: "/admin/members", icon: "👥" },
   { label: "Donations", href: "/admin/donations", icon: "💜" },
