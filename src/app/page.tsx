@@ -4,65 +4,74 @@ import { prisma } from "@/lib/prisma";
 export const revalidate = 0;
 
 export default async function HomePage() {
-  const [memberCount, sessionCount, competitionCount, coachCount] = await Promise.all([
+  const [memberCount, sessionCount, competitionCount, coachCount, latestNews] = await Promise.all([
     prisma.user.count(),
     prisma.playSession.count({ where: { status: "SCHEDULED" } }),
     prisma.competition.count(),
     prisma.coach.count({ where: { isActive: true } }),
+    prisma.newsPost.findMany({
+      where: { published: true },
+      orderBy: { publishedAt: "desc" },
+      take: 3,
+      include: {
+        competition: { select: { id: true, title: true } },
+      },
+    }),
   ]);
+
+  const categoryColors: Record<string, { color: string; bg: string }> = {
+    GENERAL: { color: "#A0A3B1", bg: "rgba(160,163,177,0.15)" },
+    COMPETITION: { color: "#FFB800", bg: "rgba(255,184,0,0.15)" },
+    ANNOUNCEMENT: { color: "#3865FF", bg: "rgba(56,101,255,0.15)" },
+    EVENT: { color: "#00D4AA", bg: "rgba(0,212,170,0.15)" },
+  };
 
   return (
     <main style={{ background: "#0C0D14", minHeight: "100vh" }}>
 
       {/* HERO MOBILE */}
-<section className="md:hidden relative min-h-[100svh] flex flex-col justify-end overflow-hidden">
-  <div className="absolute inset-0">
-    <img
-      src="/hero-mobile.png"
-      alt="Table tennis player"
-      className="w-full h-full object-cover object-center"
-    />
-    <div className="absolute inset-0"
-      style={{ background: "linear-gradient(to bottom, rgba(12,13,20,0.1) 0%, rgba(12,13,20,0.6) 50%, rgba(12,13,20,0.98) 100%)" }} />
-  </div>
-  <div className="relative z-10 px-6 pb-10 pt-32">
-    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-5"
-      style={{ background: "rgba(56,101,255,0.15)", border: "1px solid rgba(56,101,255,0.3)", color: "#3865FF" }}>
-      🎾 Non-profit · Motherwell, Scotland
-    </div>
-    <h1 className="text-4xl font-bold text-white leading-tight mb-4">
-      Play.<br />Compete.<br />
-      <span style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-        Belong.
-      </span>
-    </h1>
-    <p className="text-base mb-6" style={{ color: "#A0A3B1" }}>
-      The next generation community tennis club. Book sessions, challenge players, climb the leaderboard.
-    </p>
-    <div className="flex gap-3 flex-wrap">
-      <Link href="/sessions"
-        className="px-5 py-3 rounded-xl font-medium text-white text-sm"
-        style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
-        Book a Session
-      </Link>
-      <Link href="/competitions"
-        className="px-5 py-3 rounded-xl font-medium text-sm"
-        style={{ background: "rgba(26,27,46,0.8)", border: "1px solid #2A2B3D", color: "#A0A3B1" }}>
-        View Competitions
-      </Link>
-    </div>
-  </div>
-</section>
+      <section className="md:hidden relative min-h-[100svh] flex flex-col justify-end overflow-hidden">
+        <div className="absolute inset-0">
+          <img src="/hero-mobile.png" alt="Table tennis player"
+            className="w-full h-full object-cover object-center" />
+          <div className="absolute inset-0"
+            style={{ background: "linear-gradient(to bottom, rgba(12,13,20,0.1) 0%, rgba(12,13,20,0.6) 50%, rgba(12,13,20,0.98) 100%)" }} />
+        </div>
+        <div className="relative z-10 px-6 pb-10 pt-32">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-5"
+            style={{ background: "rgba(56,101,255,0.15)", border: "1px solid rgba(56,101,255,0.3)", color: "#3865FF" }}>
+            🎾 Non-profit · Motherwell, Scotland
+          </div>
+          <h1 className="text-4xl font-bold text-white leading-tight mb-4">
+            Play.<br />Compete.<br />
+            <span style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              Belong.
+            </span>
+          </h1>
+          <p className="text-base mb-6" style={{ color: "#A0A3B1" }}>
+            The next generation community tennis club. Book sessions, challenge players, climb the leaderboard.
+          </p>
+          <div className="flex gap-3 flex-wrap">
+            <Link href="/sessions"
+              className="px-5 py-3 rounded-xl font-medium text-white text-sm"
+              style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+              Book a Session
+            </Link>
+            <Link href="/competitions"
+              className="px-5 py-3 rounded-xl font-medium text-sm"
+              style={{ background: "rgba(26,27,46,0.8)", border: "1px solid #2A2B3D", color: "#A0A3B1" }}>
+              View Competitions
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* HERO DESKTOP */}
       <section className="hidden md:flex relative min-h-[700px] items-center overflow-hidden">
         <div className="absolute inset-0">
-          <img
-            src="/hero.png"
-            alt="Table tennis player"
+          <img src="/hero.png" alt="Table tennis player"
             className="w-full h-full object-cover"
-            style={{ objectPosition: "center center" }}
-          />
+            style={{ objectPosition: "center center" }} />
           <div className="absolute inset-0"
             style={{ background: "linear-gradient(to right, rgba(12,13,20,0.95) 0%, rgba(12,13,20,0.7) 50%, rgba(12,13,20,0.2) 100%)" }} />
           <div className="absolute inset-0"
@@ -141,6 +150,81 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* CLUB NEWS */}
+      {latestNews.length > 0 && (
+        <section className="px-6 py-16 max-w-6xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-2xl font-semibold text-white mb-1">Club News</h2>
+              <p style={{ color: "#A0A3B1" }}>Latest updates from NovaClub.</p>
+            </div>
+            <Link href="/news"
+              className="text-sm font-medium px-4 py-2 rounded-xl"
+              style={{ background: "#1A1B2E", border: "1px solid #2A2B3D", color: "#A0A3B1" }}>
+              View all →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {latestNews.map((post) => {
+              const cat = categoryColors[post.category] ?? categoryColors["GENERAL"];
+              return (
+                <div key={post.id} className="rounded-xl overflow-hidden flex flex-col"
+                  style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+                  {/* Image */}
+                  {post.imageUrl ? (
+                    <div className="h-40 overflow-hidden">
+                      <img src={post.imageUrl} alt={post.title}
+                        className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
+                    <div className="h-40 flex items-center justify-center text-4xl"
+                      style={{ background: "linear-gradient(135deg, rgba(56,101,255,0.1), rgba(123,44,255,0.1))" }}>
+                      📰
+                    </div>
+                  )}
+
+                  {/* Content */}
+                  <div className="p-5 flex flex-col flex-1">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-xs px-2.5 py-1 rounded-full font-medium"
+                        style={{ background: cat.bg, color: cat.color }}>
+                        {post.category.charAt(0) + post.category.slice(1).toLowerCase()}
+                      </span>
+                      <span className="text-xs" style={{ color: "#6B6E80" }}>
+                        {post.publishedAt
+                          ? new Date(post.publishedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+                          : ""}
+                      </span>
+                    </div>
+
+                    <h3 className="font-semibold text-white mb-2 line-clamp-2">{post.title}</h3>
+                    <p className="text-sm mb-4 flex-1 line-clamp-3" style={{ color: "#A0A3B1" }}>
+                      {post.excerpt}
+                    </p>
+
+                    {/* CTA */}
+                    {post.competition ? (
+                      <Link href={`/competitions/${post.competition.id}`}
+                        className="text-sm font-medium"
+                        style={{ color: "#3865FF" }}>
+                        View competition details →
+                      </Link>
+                    ) : (
+                      <Link href={`/news/${post.slug}`}
+                        className="text-sm font-medium"
+                        style={{ color: "#3865FF" }}>
+                        Read more →
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       {/* CTA */}
       <section className="px-6 py-16 max-w-6xl mx-auto">
         <div className="rounded-2xl p-10 text-center relative overflow-hidden"
@@ -164,7 +248,9 @@ export default async function HomePage() {
           </div>
           <div className="flex gap-6">
             {["Terms", "Privacy", "Cookies", "Contact"].map((item) => (
-              <Link key={item} href={`/${item.toLowerCase()}`} className="text-sm transition-colors hover:text-white" style={{ color: "#6B6E80" }}>
+              <Link key={item} href={`/${item.toLowerCase()}`}
+                className="text-sm transition-colors hover:text-white"
+                style={{ color: "#6B6E80" }}>
                 {item}
               </Link>
             ))}
