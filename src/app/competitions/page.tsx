@@ -138,19 +138,26 @@ export default function CompetitionsPage() {
                         <p className="text-xs" style={{ color: "#6B6E80" }}>entry fee</p>
                       </div>
 
-                      {comp.status === "OPEN" ? (
-                        <Link href={`/competitions/${comp.id}/register`}
-                          className="px-6 py-2.5 rounded-xl text-sm font-medium text-white"
-                          style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
-                          Register Now
+                      <div className="flex gap-2">
+                        <Link href={`/competitions/${comp.id}`}
+                          className="px-4 py-2.5 rounded-xl text-sm font-medium"
+                          style={{ background: "#13141F", border: "1px solid #2A2B3D", color: "#A0A3B1" }}>
+                          View Details
                         </Link>
-                      ) : (
-                        <button disabled
-                          className="px-6 py-2.5 rounded-xl text-sm font-medium"
-                          style={{ background: "#1F2038", color: "#6B6E80", border: "1px solid #2A2B3D" }}>
-                          {comp.status === "UPCOMING" ? "Opening Soon" : "Closed"}
-                        </button>
-                      )}
+                        {comp.status === "OPEN" ? (
+                          <Link href={`/competitions/${comp.id}/register`}
+                            className="px-6 py-2.5 rounded-xl text-sm font-medium text-white"
+                            style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
+                            Register Now
+                          </Link>
+                        ) : (
+                          <button disabled
+                            className="px-6 py-2.5 rounded-xl text-sm font-medium"
+                            style={{ background: "#1F2038", color: "#6B6E80", border: "1px solid #2A2B3D" }}>
+                            {comp.status === "UPCOMING" ? "Opening Soon" : "Closed"}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
