@@ -62,8 +62,11 @@ export default function AdminNewsPage() {
     fetchPosts();
     fetch("/api/admin/competitions")
       .then((r) => r.json())
-      .then((data) => setCompetitions(Array.isArray(data) ? data : []))
-      .catch(() => {});
+      .then((data) => {
+        console.log("competitions:", data);
+        setCompetitions(Array.isArray(data) ? data : []);
+      })
+      .catch((e) => console.error("fetch error:", e));
   }, []);
 
   const handleChange = (
@@ -133,6 +136,7 @@ export default function AdminNewsPage() {
     fontSize: "14px",
     outline: "none",
   };
+
   const labelStyle = {
     color: "#A0A3B1",
     display: "block",
@@ -142,7 +146,6 @@ export default function AdminNewsPage() {
 
   return (
     <div className="p-8">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-white">Club News</h1>
@@ -153,13 +156,11 @@ export default function AdminNewsPage() {
         <button
           onClick={() => { setShowForm(!showForm); setError(""); }}
           className="px-4 py-2 rounded-xl text-sm font-medium text-white"
-          style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}
-        >
+          style={{ background: "linear-gradient(135deg, #3865FF, #7B2CFF)" }}>
           {showForm ? "Cancel" : "+ New Post"}
         </button>
       </div>
 
-      {/* New post form */}
       {showForm && (
         <div className="rounded-xl p-6 mb-6" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
           <p className="text-xs font-semibold mb-4 uppercase tracking-wider" style={{ color: "#3865FF" }}>
@@ -228,7 +229,6 @@ export default function AdminNewsPage() {
         </div>
       )}
 
-      {/* Posts list */}
       <div className="rounded-xl overflow-hidden" style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
         {loading ? (
           <div className="p-8 text-center">
@@ -258,9 +258,7 @@ export default function AdminNewsPage() {
                 const cat = categoryConfig[post.category] ?? categoryConfig["GENERAL"];
                 return (
                   <tr key={post.id}
-                    style={{
-                      borderBottom: i < posts.length - 1 ? "1px solid #2A2B3D" : "none",
-                    }}>
+                    style={{ borderBottom: i < posts.length - 1 ? "1px solid #2A2B3D" : "none" }}>
                     <td className="px-5 py-4">
                       <p className="text-white font-medium">{post.title}</p>
                       <p className="text-xs mt-0.5 line-clamp-1" style={{ color: "#6B6E80" }}>
@@ -290,8 +288,7 @@ export default function AdminNewsPage() {
                     </td>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => togglePublish(post)}
+                        <button onClick={() => togglePublish(post)}
                           className="text-xs px-3 py-1.5 rounded-lg font-medium"
                           style={{
                             background: post.published ? "rgba(255,77,106,0.15)" : "rgba(0,212,170,0.15)",
@@ -299,8 +296,7 @@ export default function AdminNewsPage() {
                           }}>
                           {post.published ? "Unpublish" : "Publish"}
                         </button>
-                        <button
-                          onClick={() => handleDelete(post.id)}
+                        <button onClick={() => handleDelete(post.id)}
                           className="text-xs px-3 py-1.5 rounded-lg font-medium"
                           style={{ background: "rgba(255,77,106,0.1)", color: "#FF4D6A" }}>
                           Delete
