@@ -349,16 +349,32 @@ model OrderItem {
   @@map("order_items")
 }
 
+model DonationGoal {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  category     String?
+  targetAmount Float
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  donations Donation[]
+
+  @@map("donation_goals")
+}
+
 model Donation {
   id              String   @id @default(cuid())
-  userId          String?
+  userId          String
+  goalId          String
   amount          Float
-  message         String?
-  isAnonymous     Boolean  @default(false)
   stripePaymentId String?  @unique
+  message         String?
   createdAt       DateTime @default(now())
 
-  user User? @relation(fields: [userId], references: [id])
+  user User         @relation(fields: [userId], references: [id])
+  goal DonationGoal @relation(fields: [goalId], references: [id])
 
   @@map("donations")
 }

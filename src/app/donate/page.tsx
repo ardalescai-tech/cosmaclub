@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 const presetAmounts = [5, 10, 25, 50];
@@ -12,6 +12,15 @@ const impactItems = [
   { amount: 50, description: "Funds a full open play session", icon: "🏆" },
 ];
 
+type DonationGoal = {
+  id: string;
+  title: string;
+  description: string | null;
+  category: string | null;
+  targetAmount: number;
+  raised: number;
+};
+
 export default function DonatePage() {
   const [selectedAmount, setSelectedAmount] = useState<number>(10);
   const [customAmount, setCustomAmount] = useState<string>("");
@@ -19,6 +28,15 @@ export default function DonatePage() {
   const [message, setMessage] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [goals, setGoals] = useState<DonationGoal[]>([]);
+  const [selectedGoalId, setSelectedGoalId] = useState<string>("");
+
+  useEffect(() => {
+    fetch("/api/donation-goals")
+      .then((r) => r.json())
+      .then((data) => setGoals(Array.isArray(data) ? data : []))
+      .catch(() => {});
+  }, []);
 
   const handlePreset = (amount: number) => {
     setSelectedAmount(amount);
@@ -35,7 +53,12 @@ export default function DonatePage() {
       const res = await fetch("/api/donate/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: finalAmount, message, isAnonymous }),
+        body: JSON.stringify({
+          amount: finalAmount,
+          message,
+          isAnonymous,
+          goalId: selectedGoalId || null,
+        }),
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
@@ -52,6 +75,49 @@ export default function DonatePage() {
         <h1 className="text-4xl font-bold text-white mb-2">Support NovaClub</h1>
         <p style={{ color: "#A0A3B1" }}>Every donation goes directly back into the club.</p>
       </section>
+
+      {/* DONATION GOALS */}
+      {goals.length > 0 && (
+        <section className="px-6 pb-10 max-w-4xl mx-auto">
+          <h2 className="font-semibold text-white mb-4">Current Fundraising Goals</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {goals.map((goal) => {
+              const percent = Math.min(Math.round((goal.raised / goal.targetAmount) * 100), 100);
+              return (
+                <div key={goal.id} className="rounded-xl p-5"
+                  style={{ background: "#1A1B2E", border: "1px solid #2A2B3D" }}>
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <p className="font-semibold text-white">{goal.title}</p>
+                      {goal.category && (
+                        <span className="text-xs px-2 py-0.5 rounded-full mt-1 inline-block"
+                          style={{ background: "rgba(56,101,255,0.15)", color: "#3865FF" }}>
+                          {goal.category}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-sm font-bold" style={{ color: "#3865FF" }}>{percent}%</span>
+                  </div>
+                  {goal.description && (
+                    <p className="text-xs mb-3" style={{ color: "#A0A3B1" }}>{goal.description}</p>
+                  )}
+                  <div className="w-full rounded-full h-2 mb-2" style={{ background: "#2A2B3D" }}>
+                    <div className="h-2 rounded-full transition-all"
+                      style={{
+                        width: `${percent}%`,
+                        background: "linear-gradient(90deg, #3865FF, #7B2CFF)",
+                      }} />
+                  </div>
+                  <div className="flex justify-between text-xs" style={{ color: "#6B6E80" }}>
+                    <span>£{goal.raised.toFixed(2)} raised</span>
+                    <span>£{goal.targetAmount.toFixed(2)} goal</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       <section className="px-6 pb-16 max-w-4xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -83,6 +149,24 @@ export default function DonatePage() {
               style={{ background: "#13141F", border: "1px solid #2A2B3D", color: "#fff" }}
             />
 
+            {goals.length > 0 && (
+              <div className="mb-4">
+                <label className="block text-sm mb-1" style={{ color: "#A0A3B1" }}>
+                  Donate towards a specific goal (optional)
+                </label>
+                <select
+                  value={selectedGoalId}
+                  onChange={(e) => setSelectedGoalId(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+                  style={{ background: "#13141F", border: "1px solid #2A2B3D", color: "#fff" }}>
+                  <option value="">No specific goal</option>
+                  {goals.map((g) => (
+                    <option key={g.id} value={g.id}>{g.title}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -92,7 +176,8 @@ export default function DonatePage() {
             />
 
             <div className="flex items-center gap-2 mb-6">
-              <input type="checkbox" id="anon" checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)}
+              <input type="checkbox" id="anon" checked={isAnonymous}
+                onChange={(e) => setIsAnonymous(e.target.checked)}
                 className="w-4 h-4" style={{ accentColor: "#3865FF" }} />
               <label htmlFor="anon" className="text-sm" style={{ color: "#A0A3B1" }}>Donate anonymously</label>
             </div>
