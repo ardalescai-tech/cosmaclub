@@ -30,11 +30,19 @@ export async function POST(req: Request) {
 
   try {
     const data = await req.json();
-    if (!data.title || !data.slug || !data.excerpt || !data.content) {
+    if (!data.title || !data.excerpt || !data.content) {
       return NextResponse.json(
-        { error: "title, slug, excerpt, and content are required" },
+        { error: "title, excerpt, and content are required" },
         { status: 400 }
       );
+    }
+
+    if (!data.slug) {
+      data.slug = data.title
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .trim()
+        .replace(/\s+/g, "-");
     }
 
     if (data.published && !data.publishedAt) {
