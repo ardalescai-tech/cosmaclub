@@ -366,15 +366,16 @@ model DonationGoal {
 
 model Donation {
   id              String   @id @default(cuid())
-  userId          String
-  goalId          String
+  userId          String?
+  goalId          String?
   amount          Float
   stripePaymentId String?  @unique
   message         String?
+  isAnonymous     Boolean  @default(false)
   createdAt       DateTime @default(now())
 
-  user User         @relation(fields: [userId], references: [id])
-  goal DonationGoal @relation(fields: [goalId], references: [id])
+  user User?         @relation(fields: [userId], references: [id])
+  goal DonationGoal? @relation(fields: [goalId], references: [id])
 
   @@map("donations")
 }

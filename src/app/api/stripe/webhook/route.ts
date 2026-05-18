@@ -39,9 +39,9 @@ export async function POST(req: NextRequest) {
         if (cs.metadata?.type === "donation") {
           await prisma.donation.create({
             data: {
-              userId: null,
+              userId: undefined,
               amount: (cs.amount_total ?? 0) / 100,
-              message: cs.metadata.message || null,
+              message: cs.metadata.message || undefined,
               isAnonymous: cs.metadata.isAnonymous === "true",
               stripePaymentId: cs.payment_intent as string,
             },
